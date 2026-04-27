@@ -9,8 +9,10 @@ import respx
 
 from snaq_verify.core.config import Settings
 from snaq_verify.domain.models.enums import USDADataType
+from snaq_verify.domain.models.food_item import NutritionPer100g
+from snaq_verify.domain.models.source_lookup import USDACandidate
 from snaq_verify.infrastructure.cache.in_memory_cache import InMemoryCache
-from snaq_verify.infrastructure.sources.usda_client import USDAClient
+from snaq_verify.infrastructure.sources.usda_client import USDAClient, _is_likely_valid
 from tests.fakes.fake_logger import FakeLogger
 
 # ---------------------------------------------------------------------------
@@ -76,7 +78,7 @@ async def test_search_returns_candidates(client: USDAClient) -> None:
 
     assert len(results) == 2
     first = results[0]
-    assert first.fdc_id == 331960
+    assert first.fdc_id == 2646170  # post-migration Foundation ID (>= 2M)
     assert first.description == "Chicken Breast, Raw"
     assert first.data_type == USDADataType.FOUNDATION
     assert first.brand_owner is None
@@ -376,3 +378,138 @@ async def test_get_food_401_raises(client: USDAClient) -> None:
     with pytest.raises(httpx.HTTPStatusError) as exc_info:
         await client.get_food(171477)
     assert exc_info.value.response.status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# Foundation ID validation — _is_likely_valid()
+# ---------------------------------------------------------------------------
+
+
+def test_is_likely_valid_drops_superseded_foundation_ids() -> None:
+    """Pre-migration Foundation IDs (< 2M) must be rejected."""
+    nutrition = NutritionPer100g(
+        calories_kcal=0, protein_g=0, fat_g=0, saturated_fat_g=0,
+        carbohydrates_g=0, sugar_g=0, fiber_g=0, sodium_mg=0,
+    )
+    superseded_ids = [746782, 747447, 748967]
+    for fdc_id in superseded_ids:
+        candidate = USDACandidate(
+            fdc_id=fdc_id,
+            description="Superseded",
+            data_type=USDADataType.FOUNDATION,
+            nutrition_per_100g=nutrition,
+        )
+        assert not _is_likely_valid(candidate), f"Expected {fdc_id} to be invalid"
+
+
+def test_is_likely_valid_keeps_sr_legacy_regardless_of_id() -> None:
+    """SR Legacy IDs in any range must NOT be filtered."""
+    nutrition = NutritionPer100g(
+        calories_kcal=0, protein_g=0, fat_g=0, saturated_fat_g=0,
+        carbohydrates_g=0, sugar_g=0, fiber_g=0, sodium_mg=0,
+    )
+    for fdc_id in [746782, 747447, 748967, 171477]:
+        candidate = USDACandidate(
+            fdc_id=fdc_id,
+            description="SR Legacy",
+            data_type=USDADataType.SR_LEGACY,
+            nutrition_per_100g=nutrition,
+        )
+        assert _is_likely_valid(candidate), f"Expected SR Legacy {fdc_id} to be valid"
+
+
+def test_is_likely_valid_keeps_post_migration_foundation_ids() -> None:
+    """Post-migration Foundation IDs (>= 2M) must pass through."""
+    nutrition = NutritionPer100g(
+        calories_kcal=0, protein_g=0, fat_g=0, saturated_fat_g=0,
+        carbohydrates_g=0, sugar_g=0, fiber_g=0, sodium_mg=0,
+    )
+    for fdc_id in [2_000_000, 2_646_170, 2_708_638]:
+        candidate = USDACandidate(
+            fdc_id=fdc_id,
+            description="Valid Foundation",
+            data_type=USDADataType.FOUNDATION,
+            nutrition_per_100g=nutrition,
+        )
+        assert _is_likely_valid(candidate), f"Expected {fdc_id} to be valid"
+
+
+@respx.mock
+async def test_search_filters_superseded_foundation_ids(client: USDAClient) -> None:
+    """search() silently drops Foundation hits with pre-migration FDC IDs."""
+    mixed_response = {
+        "totalHits": 3,
+        "currentPage": 1,
+        "foods": [
+            {
+                "fdcId": 746782,         # superseded Foundation — must be dropped
+                "description": "Chicken Breast, superseded",
+                "dataType": "Foundation",
+                "brandOwner": None,
+                "score": 999.0,
+                "foodNutrients": [],
+            },
+            {
+                "fdcId": 2646170,        # valid post-migration Foundation — keep
+                "description": "Chicken Breast, valid Foundation",
+                "dataType": "Foundation",
+                "brandOwner": None,
+                "score": 950.0,
+                "foodNutrients": [],
+            },
+            {
+                "fdcId": 171477,         # SR Legacy — always keep
+                "description": "Chicken, broilers, breast, raw",
+                "dataType": "SR Legacy",
+                "brandOwner": None,
+                "score": 900.0,
+                "foodNutrients": [],
+            },
+        ],
+    }
+    respx.get(f"{BASE_URL}/foods/search").mock(
+        return_value=httpx.Response(200, json=mixed_response)
+    )
+
+    results = await client.search("chicken breast")
+
+    fdc_ids = [r.fdc_id for r in results]
+    assert 746782 not in fdc_ids, "Superseded Foundation ID must be filtered"
+    assert 2646170 in fdc_ids, "Valid Foundation ID must be kept"
+    assert 171477 in fdc_ids, "SR Legacy ID must be kept"
+    assert len(results) == 2
+
+
+@respx.mock
+async def test_search_returns_none_nutrition_for_incomplete_inline_nutrients(
+    client: USDAClient,
+) -> None:
+    """nutrition_per_100g is None when the search hit's foodNutrients is incomplete."""
+    partial_response = {
+        "totalHits": 1,
+        "currentPage": 1,
+        "foods": [
+            {
+                "fdcId": 2646170,
+                "description": "Chicken Breast",
+                "dataType": "Foundation",
+                "brandOwner": None,
+                "score": 900.0,
+                "foodNutrients": [
+                    # Only protein and fat — missing 6 of the 8 required IDs
+                    {"nutrientId": 1003, "nutrientName": "Protein", "value": 22.5, "unitName": "G"},
+                    {"nutrientId": 1004, "nutrientName": "Total lipid (fat)", "value": 1.93, "unitName": "G"},
+                ],
+            }
+        ],
+    }
+    respx.get(f"{BASE_URL}/foods/search").mock(
+        return_value=httpx.Response(200, json=partial_response)
+    )
+
+    results = await client.search("chicken breast")
+
+    assert len(results) == 1
+    assert results[0].nutrition_per_100g is None, (
+        "Should be None — incomplete inline nutrients signal caller to use get_food()"
+    )

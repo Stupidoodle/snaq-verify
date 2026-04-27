@@ -1,11 +1,11 @@
 {
-  "_comment": "SYNTHETIC test fixture — values shaped like a real FDC search response but fabricated for test isolation. fdcId 331960 and 171477 in this file do NOT match their live API values. Do NOT treat these as authoritative USDA records.",
+  "_comment": "SYNTHETIC test fixture — values shaped like a real FDC search response but fabricated for test isolation. fdcId 2646170 is a valid post-migration Foundation ID (>= 2M); 171477 is SR Legacy. Do NOT treat these as authoritative USDA records.",
   "totalHits": 2,
   "currentPage": 1,
   "totalPages": 1,
   "foods": [
     {
-      "fdcId": 331960,
+      "fdcId": 2646170,
       "description": "Chicken Breast, Raw",
       "dataType": "Foundation",
       "brandOwner": null,

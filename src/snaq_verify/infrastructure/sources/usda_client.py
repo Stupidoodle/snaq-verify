@@ -34,6 +34,39 @@ NUTRIENT_ID_MAP: dict[int, str] = {
 # Accepted data-type strings from FDC (some responses use alternate spellings)
 _DATA_TYPE_ALIASES: dict[str, USDADataType] = {dt.value: dt for dt in USDADataType}
 
+# ---------------------------------------------------------------------------
+# Foundation Food ID validation
+# ---------------------------------------------------------------------------
+
+#: USDA migrated Foundation Foods to the 2M+ ID range in 2024.  Older
+#: Foundation IDs (pre-migration) are still indexed by /foods/search but
+#: return 404 on /food/{id}.  SR Legacy and Branded IDs are unaffected.
+FOUNDATION_MIN_VALID_FDC_ID: int = 2_000_000
+
+#: The full set of nutrient IDs that must appear in a search hit for the
+#: inline ``foodNutrients`` to be considered complete enough to skip a
+#: follow-up ``get_food()`` call.
+_REQUIRED_NUTRIENT_IDS: frozenset[int] = frozenset(NUTRIENT_ID_MAP)
+
+
+def _is_likely_valid(candidate: USDACandidate) -> bool:
+    """Return False for superseded Foundation Food IDs that 404 on detail.
+
+    USDA migrated Foundation Foods to the 2M+ ID range in 2024.  Older
+    Foundation IDs are still indexed by ``/foods/search`` but return 404 on
+    ``/food/{id}``.  SR Legacy, Branded, and Survey IDs are unaffected.
+
+    Args:
+        candidate: The candidate to evaluate.
+
+    Returns:
+        ``True`` when the candidate is likely fetchable via ``get_food``.
+        ``False`` when it is a superseded Foundation Food that will 404.
+    """
+    if candidate.data_type == USDADataType.FOUNDATION:
+        return candidate.fdc_id >= FOUNDATION_MIN_VALID_FDC_ID
+    return True
+
 
 class USDAClient(USDAClientPort):
     """Concrete USDA FoodData Central adapter using ``httpx.AsyncClient``.
@@ -110,7 +143,18 @@ class USDAClient(USDAClientPort):
         self._handle_error(response, context=f"search query={query!r}")
 
         foods = response.json().get("foods", [])
-        candidates = [self._parse_search_hit(f) for f in foods]
+        raw_candidates = [self._parse_search_hit(f) for f in foods]
+
+        # Drop superseded Foundation IDs that still appear in the search index
+        # but 404 on the detail endpoint.  See FOUNDATION_MIN_VALID_FDC_ID.
+        candidates = [c for c in raw_candidates if _is_likely_valid(c)]
+        dropped = len(raw_candidates) - len(candidates)
+        if dropped:
+            self._logger.debug(
+                "usda search dropped superseded Foundation IDs",
+                query=query,
+                dropped=dropped,
+            )
 
         self._cache.set(
             cache_key,
@@ -226,15 +270,31 @@ class USDAClient(USDAClientPort):
     ) -> USDACandidate:
         """Convert one FDC search-result dict into a ``USDACandidate``.
 
+        Populates ``nutrition_per_100g`` from the inline ``foodNutrients``
+        array when **all** eight mapped nutrient IDs are present, avoiding a
+        follow-up ``get_food()`` call for happy-path queries.  When the inline
+        data is incomplete (USDA omits some nutrients from search hits),
+        ``nutrition_per_100g`` is left ``None`` so the agent knows to call
+        ``get_food()`` for authoritative values.
+
         Args:
             food: A single entry from the ``foods`` array in the search response.
 
         Returns:
-            ``USDACandidate`` with ``nutrition_per_100g`` populated.
+            ``USDACandidate`` with ``nutrition_per_100g`` set when the inline
+            nutrient list is complete, otherwise ``None``.
         """
         raw_dt = food.get("dataType", "Foundation")
         data_type = _DATA_TYPE_ALIASES.get(raw_dt, USDADataType.FOUNDATION)
-        nutrition = self._parse_search_nutrients(food.get("foodNutrients", []))
+
+        food_nutrients: list[dict] = food.get("foodNutrients", [])  # type: ignore[type-arg]
+        present_ids = {int(e["nutrientId"]) for e in food_nutrients if "nutrientId" in e}
+        nutrition: NutritionPer100g | None = (
+            self._parse_search_nutrients(food_nutrients)
+            if _REQUIRED_NUTRIENT_IDS.issubset(present_ids)
+            else None
+        )
+
         return USDACandidate(
             fdc_id=food["fdcId"],
             description=food.get("description", ""),
