@@ -1,0 +1,87 @@
+[
+  {
+    "item_id": "chicken-breast-raw",
+    "item_name": "Chicken Breast, Skinless, Raw",
+    "source": "USDA FoodData Central — Foundation Foods",
+    "source_url": "https://fdc.nal.usda.gov/food-details/2646170",
+    "nutrition_per_100g": {
+      "calories_kcal": 112.0,
+      "protein_g": 22.5,
+      "fat_g": 1.93,
+      "saturated_fat_g": 0.55,
+      "carbohydrates_g": 0.0,
+      "sugar_g": 0.0,
+      "fiber_g": 0.0,
+      "sodium_mg": 55.0
+    },
+    "notes": "FDC Foundation entry 2646170 (raw, boneless, skinless). Input file reports 165 kcal / 3.6g fat — these match a *cooked* value, not raw. Expect MAJOR_DISCREPANCY on kcal and fat. Sat-fat filled from SR Legacy 171477."
+  },
+  {
+    "item_id": "avocado-raw",
+    "item_name": "Avocado, Raw",
+    "source": "USDA FoodData Central — Foundation Foods (Hass)",
+    "source_url": "https://fdc.nal.usda.gov/food-details/2710824",
+    "nutrition_per_100g": {
+      "calories_kcal": 206.0,
+      "protein_g": 1.81,
+      "fat_g": 20.3,
+      "saturated_fat_g": 2.97,
+      "carbohydrates_g": 8.32,
+      "sugar_g": 0.56,
+      "fiber_g": 6.7,
+      "sodium_mg": 1.0
+    },
+    "notes": "FDC Foundation entry 2710824 (Hass avocado, raw). Input file has fat=4.5g — this is a *planted major error* (real fat is ~20g). Expect MAJOR_DISCREPANCY on fat and kcal. Sat-fat and sugars filled from SR Legacy 09037."
+  },
+  {
+    "item_id": "oats-rolled-dry",
+    "item_name": "Oats, Rolled, Dry",
+    "source": "USDA FoodData Central — Foundation Foods",
+    "source_url": "https://fdc.nal.usda.gov/food-details/2346396",
+    "nutrition_per_100g": {
+      "calories_kcal": 379.0,
+      "protein_g": 13.5,
+      "fat_g": 5.89,
+      "saturated_fat_g": 1.03,
+      "carbohydrates_g": 68.7,
+      "sugar_g": 0.0,
+      "fiber_g": 10.4,
+      "sodium_mg": 1.0
+    },
+    "notes": "FDC Foundation entry 2346396 (rolled oats, dry). Input file reports 240 kcal / 42g carbs — these are roughly *half* the real values, a MAJOR discrepancy (possibly per-serving values mislabelled as per-100g). Sat-fat from SR Legacy 08120."
+  },
+  {
+    "item_id": "egg-whole-raw",
+    "item_name": "Egg, Whole, Raw",
+    "source": "USDA FoodData Central — Foundation Foods",
+    "source_url": "https://fdc.nal.usda.gov/food-details/748967",
+    "nutrition_per_100g": {
+      "calories_kcal": 148.0,
+      "protein_g": 12.4,
+      "fat_g": 9.96,
+      "saturated_fat_g": 3.2,
+      "carbohydrates_g": 0.96,
+      "sugar_g": 0.2,
+      "fiber_g": 0.0,
+      "sodium_mg": 129.0
+    },
+    "notes": "FDC Foundation entry 748967 (whole egg, raw). Input file reports 155 kcal / 11.0g fat / 13.0g protein — within 5–10 % on most nutrients. Expect MINOR_DISCREPANCY overall (kcal ~5 % high, fat ~10 % high)."
+  },
+  {
+    "item_id": "broccoli-raw",
+    "item_name": "Broccoli, Raw",
+    "source": "USDA FoodData Central — Foundation Foods",
+    "source_url": "https://fdc.nal.usda.gov/food-details/747447",
+    "nutrition_per_100g": {
+      "calories_kcal": 31.0,
+      "protein_g": 2.57,
+      "fat_g": 0.34,
+      "saturated_fat_g": 0.04,
+      "carbohydrates_g": 6.27,
+      "sugar_g": 1.4,
+      "fiber_g": 2.4,
+      "sodium_mg": 36.0
+    },
+    "notes": "FDC Foundation entry 747447 (broccoli, raw). Input file reports 34 kcal / 2.8g protein / 7.0g carbs — all within ~10 % of USDA values. Expect MINOR_DISCREPANCY (carbs ~12 % high) or MATCH depending on thresholds."
+  }
+]
