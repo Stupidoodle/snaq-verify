@@ -8,13 +8,13 @@
       "calories_kcal": 112.0,
       "protein_g": 22.5,
       "fat_g": 1.93,
-      "saturated_fat_g": 0.55,
+      "saturated_fat_g": 0.349,
       "carbohydrates_g": 0.0,
       "sugar_g": 0.0,
       "fiber_g": 0.0,
-      "sodium_mg": 55.0
+      "sodium_mg": 65.75
     },
-    "notes": "FDC Foundation entry 2646170 (raw, boneless, skinless). Input file reports 165 kcal / 3.6g fat — these match a *cooked* value, not raw. Expect MAJOR_DISCREPANCY on kcal and fat. Sat-fat filled from SR Legacy 171477."
+    "notes": "FDC Foundation entry 2646170 (raw, boneless, skinless). Sat-fat corrected to 0.349g and sodium to 65.75mg from live FDC data (audit fix). Input file reports 165 kcal / 3.6g fat — these match a *cooked* value, not raw. Expect MAJOR_DISCREPANCY on kcal and fat."
   },
   {
     "item_id": "avocado-raw",
@@ -53,10 +53,10 @@
   {
     "item_id": "egg-whole-raw",
     "item_name": "Egg, Whole, Raw",
-    "source": "USDA FoodData Central — Foundation Foods",
-    "source_url": "https://fdc.nal.usda.gov/food-details/748967",
+    "source": "USDA FoodData Central — Survey (FNDDS)",
+    "source_url": "https://fdc.nal.usda.gov/food-details/2707152",
     "nutrition_per_100g": {
-      "calories_kcal": 148.0,
+      "calories_kcal": 143.0,
       "protein_g": 12.4,
       "fat_g": 9.96,
       "saturated_fat_g": 3.2,
@@ -65,15 +65,15 @@
       "fiber_g": 0.0,
       "sodium_mg": 129.0
     },
-    "notes": "FDC Foundation entry 748967 (whole egg, raw). Input file reports 155 kcal / 11.0g fat / 13.0g protein — within 5–10 % on most nutrients. Expect MINOR_DISCREPANCY overall (kcal ~5 % high, fat ~10 % high)."
+    "notes": "FDC Survey FNDDS entry 2707152 (whole egg, raw) — replaces FDC 748967 which returns 404 (audit fix). kcal corrected 148→143. Input file reports 155 kcal / 11.0g fat / 13.0g protein — within 5–10 % on most nutrients. Expect MINOR_DISCREPANCY overall (kcal ~8 % high, fat ~10 % high)."
   },
   {
     "item_id": "broccoli-raw",
     "item_name": "Broccoli, Raw",
     "source": "USDA FoodData Central — Foundation Foods",
-    "source_url": "https://fdc.nal.usda.gov/food-details/747447",
+    "source_url": "https://fdc.nal.usda.gov/food-details/2709643",
     "nutrition_per_100g": {
-      "calories_kcal": 31.0,
+      "calories_kcal": 39.0,
       "protein_g": 2.57,
       "fat_g": 0.34,
       "saturated_fat_g": 0.04,
@@ -82,24 +82,24 @@
       "fiber_g": 2.4,
       "sodium_mg": 36.0
     },
-    "notes": "FDC Foundation entry 747447 (broccoli, raw). Input file reports 34 kcal / 2.8g protein / 7.0g carbs — all within ~10 % of USDA values. Expect MINOR_DISCREPANCY (carbs ~12 % high) or MATCH depending on thresholds."
+    "notes": "FDC Foundation entry 2709643 (broccoli, raw) — replaces FDC 747447 which returns 404 (audit fix). kcal corrected 31→39. Input file reports 34 kcal / 2.8g protein / 7.0g carbs — all within ~10 % of USDA values. Expect MINOR_DISCREPANCY (kcal ~13 % low, carbs ~12 % high)."
   },
   {
     "item_id": "banana-raw",
     "item_name": "Banana, Raw",
-    "source": "USDA FoodData Central — Foundation Foods",
-    "source_url": "https://fdc.nal.usda.gov/food-details/1105314",
+    "source": "USDA FoodData Central — SR Legacy",
+    "source_url": "https://fdc.nal.usda.gov/food-details/173944",
     "nutrition_per_100g": {
-      "calories_kcal": 97.0,
-      "protein_g": 0.74,
-      "fat_g": 0.29,
+      "calories_kcal": 89.0,
+      "protein_g": 1.09,
+      "fat_g": 0.33,
       "saturated_fat_g": 0.11,
-      "carbohydrates_g": 23.0,
-      "sugar_g": 15.8,
-      "fiber_g": 1.7,
-      "sodium_mg": 0.0
+      "carbohydrates_g": 22.84,
+      "sugar_g": 12.23,
+      "fiber_g": 2.6,
+      "sodium_mg": 1.0
     },
-    "notes": "FDC Foundation entry 1105314 (banana, raw, without peel). Input file reports 106 kcal / 27g carbs — kcal ~9 % high and carbs ~17 % high. Expect MINOR_DISCREPANCY (kcal) shading toward MAJOR on carbs."
+    "notes": "SR Legacy entry 173944 (banana, raw) — replaces FDC 1105314 which returns 404 on the detail endpoint (audit fix). Values updated to match SR Legacy: kcal 97→89, protein 0.74→1.09, carbs 23.0→22.84, sugars 15.8→12.23, fiber 1.7→2.6. Input file reports 106 kcal / 27g carbs — kcal ~19 % high and carbs ~18 % high. Expect MAJOR_DISCREPANCY on both kcal and carbs."
   },
   {
     "item_id": "whole-milk",
@@ -122,7 +122,7 @@
     "item_id": "almonds-raw",
     "item_name": "Almonds, Raw",
     "source": "USDA FoodData Central — SR Legacy",
-    "source_url": "https://fdc.nal.usda.gov/food-details/169426",
+    "source_url": "https://fdc.nal.usda.gov/food-details/170567",
     "nutrition_per_100g": {
       "calories_kcal": 579.0,
       "protein_g": 21.2,
@@ -133,7 +133,7 @@
       "fiber_g": 12.5,
       "sodium_mg": 1.0
     },
-    "notes": "SR Legacy entry 169426 (almonds, dry roasted values align; raw values consistent). Input file values are accurate — all macros within 2 % of reference. Expect MATCH."
+    "notes": "SR Legacy entry 170567 (Nuts, almonds) — replaces incorrect FDC 169426 which is 'Nuts, pistachio nuts, dry roasted, with salt added' (audit fix). Nutrition values were already correct and unchanged. Input file values are accurate — all macros within 2 % of reference. Expect MATCH."
   },
   {
     "item_id": "salmon-atlantic-farmed-raw",
@@ -155,25 +155,25 @@
   {
     "item_id": "fage-total-0-greek-yogurt",
     "item_name": "Fage Total 0% Greek Yogurt",
-    "source": "Fage USA official product page",
-    "source_url": "https://usa.fage/products/yogurt/fage-total-0",
+    "source": "USDA FoodData Central — Branded Foods (FAGE USA DAIRY INDUSTRY INC.)",
+    "source_url": "https://fdc.nal.usda.gov/food-details/375764",
     "nutrition_per_100g": {
       "calories_kcal": 57.0,
       "protein_g": 10.0,
-      "fat_g": 0.2,
-      "saturated_fat_g": 0.1,
+      "fat_g": 0.0,
+      "saturated_fat_g": 0.0,
       "carbohydrates_g": 3.6,
       "sugar_g": 3.6,
       "fiber_g": 0.0,
-      "sodium_mg": 36.0
+      "sodium_mg": 38.0
     },
-    "notes": "Values derived from the Fage USA label (240g container: 133 kcal, 24g protein, <0.5g fat, 9g carbs / sugars, 85mg sodium) normalised to per-100g. Input file has protein=5.5g — this is a *planted major error* (real value ~10g/100g). Expect MAJOR_DISCREPANCY on protein. BARCODE NOTE: barcode 5200435000027 returns HTTP 404 on Open Food Facts; the verifier agent must fall back to search_off_by_name or web search and cite the Fage official page."
+    "notes": "USDA Branded Foods entry 375764 (FDC) for 'Total 0% nonfat greek strained yogurt' by FAGE USA DAIRY INDUSTRY INC. — replaces usa.fage URL which has SSL certificate failure (audit fix). Fat corrected 0.2→0.0g, sat_fat corrected 0.1→0.0g, sodium corrected 36→38mg per FDC. Input file has protein=5.5g — this is a *planted major error* (real value ~10g/100g per FDC 375764). Expect MAJOR_DISCREPANCY on protein. BARCODE NOTE: barcode 5200435000027 returns HTTP 404 on Open Food Facts; the verifier agent must fall back to search_off_by_name or web search. Cross-reference: Open Food Facts UPC 0689544083016 (https://world.openfoodfacts.org/product/0689544083016)."
   },
   {
     "item_id": "white-bread",
     "item_name": "Bread, White, Commercially Prepared",
     "source": "USDA FoodData Central — SR Legacy",
-    "source_url": "https://fdc.nal.usda.gov/food-details/172686",
+    "source_url": "https://fdc.nal.usda.gov/food-details/174924",
     "nutrition_per_100g": {
       "calories_kcal": 265.0,
       "protein_g": 8.9,
@@ -181,9 +181,9 @@
       "saturated_fat_g": 0.7,
       "carbohydrates_g": 49.0,
       "sugar_g": 5.1,
-      "fiber_g": 2.4,
+      "fiber_g": 2.7,
       "sodium_mg": 491.0
     },
-    "notes": "SR Legacy entry 172686 (white bread, commercially prepared). Input file reports 198 kcal — ~34 % below the reference (265 kcal); this is a *planted major error*, possibly a per-slice value mislabelled as per-100g. Expect MAJOR_DISCREPANCY on kcal and carbs."
+    "notes": "SR Legacy entry 174924 (Bread, white, commercially prepared) — replaces FDC 172686 which is 'Bread, wheat' (audit fix). Fiber corrected 2.4→2.7g. Input file reports 198 kcal — ~34 % below the reference (265 kcal); this is a *planted major error*, possibly a per-slice value mislabelled as per-100g. Expect MAJOR_DISCREPANCY on kcal and carbs."
   }
 ]
