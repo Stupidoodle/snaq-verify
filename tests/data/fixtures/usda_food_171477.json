@@ -1,4 +1,5 @@
 {
+  "_comment": "SYNTHETIC fixture for unit-test isolation. FDC ID 171477 is real but refers to cooked chicken (protein 31g, kcal 165). The nutrient values here are fabricated raw-chicken figures to give the USDAClient parser something to parse. Do not use as a source of authoritative nutritional data.",
   "fdcId": 171477,
   "description": "Chicken, broilers or fryers, breast, meat only, raw",
   "dataType": "SR Legacy",
