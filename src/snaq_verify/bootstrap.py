@@ -55,6 +55,14 @@ class Bootstrap:
         """
         settings = settings or get_settings()
 
+        # Propagate the OpenAI key from Settings (loaded from .env via
+        # pydantic-settings) into the agents SDK. Without this the SDK
+        # reads OPENAI_API_KEY from os.environ directly and crashes when
+        # only `.env` is populated.
+        from agents import set_default_openai_key
+
+        set_default_openai_key(settings.OPENAI_API_KEY)
+
         # Lazy adapter imports — keeps this module importable while Phase 2
         # adapters are still in flight. Each teammate fills in their import
         # + constructor call in their own commit.
