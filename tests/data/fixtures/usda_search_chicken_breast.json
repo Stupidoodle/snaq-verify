@@ -1,0 +1,41 @@
+{
+  "totalHits": 2,
+  "currentPage": 1,
+  "totalPages": 1,
+  "foods": [
+    {
+      "fdcId": 331960,
+      "description": "Chicken Breast, Raw",
+      "dataType": "Foundation",
+      "brandOwner": null,
+      "score": 1047.9,
+      "foodNutrients": [
+        {"nutrientId": 1003, "nutrientName": "Protein", "unitName": "G", "value": 23.2},
+        {"nutrientId": 1004, "nutrientName": "Total lipid (fat)", "unitName": "G", "value": 1.24},
+        {"nutrientId": 1005, "nutrientName": "Carbohydrate, by difference", "unitName": "G", "value": 0.0},
+        {"nutrientId": 1008, "nutrientName": "Energy", "unitName": "KCAL", "value": 120.0},
+        {"nutrientId": 1079, "nutrientName": "Fiber, total dietary", "unitName": "G", "value": 0.0},
+        {"nutrientId": 2000, "nutrientName": "Sugars, total including NLEA", "unitName": "G", "value": 0.0},
+        {"nutrientId": 1093, "nutrientName": "Sodium, Na", "unitName": "MG", "value": 74.0},
+        {"nutrientId": 1258, "nutrientName": "Fatty acids, total saturated", "unitName": "G", "value": 0.32}
+      ]
+    },
+    {
+      "fdcId": 171477,
+      "description": "Chicken, broilers or fryers, breast, meat only, raw",
+      "dataType": "SR Legacy",
+      "brandOwner": null,
+      "score": 987.3,
+      "foodNutrients": [
+        {"nutrientId": 1003, "nutrientName": "Protein", "unitName": "G", "value": 23.2},
+        {"nutrientId": 1004, "nutrientName": "Total lipid (fat)", "unitName": "G", "value": 1.24},
+        {"nutrientId": 1005, "nutrientName": "Carbohydrate, by difference", "unitName": "G", "value": 0.0},
+        {"nutrientId": 1008, "nutrientName": "Energy", "unitName": "KCAL", "value": 120.0},
+        {"nutrientId": 1079, "nutrientName": "Fiber, total dietary", "unitName": "G", "value": 0.0},
+        {"nutrientId": 2000, "nutrientName": "Sugars, total including NLEA", "unitName": "G", "value": 0.0},
+        {"nutrientId": 1093, "nutrientName": "Sodium, Na", "unitName": "MG", "value": 69.0},
+        {"nutrientId": 1258, "nutrientName": "Fatty acids, total saturated", "unitName": "G", "value": 0.32}
+      ]
+    }
+  ]
+}

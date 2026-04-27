@@ -1,0 +1,18 @@
+{
+  "fdcId": 171477,
+  "description": "Chicken, broilers or fryers, breast, meat only, raw",
+  "dataType": "SR Legacy",
+  "publicationDate": "2019-04-01",
+  "brandOwner": null,
+  "foodNutrients": [
+    {"nutrient": {"id": 1003, "name": "Protein", "unitName": "g"}, "amount": 23.2},
+    {"nutrient": {"id": 1004, "name": "Total lipid (fat)", "unitName": "g"}, "amount": 1.24},
+    {"nutrient": {"id": 1005, "name": "Carbohydrate, by difference", "unitName": "g"}, "amount": 0.0},
+    {"nutrient": {"id": 1008, "name": "Energy", "unitName": "kcal"}, "amount": 120.0},
+    {"nutrient": {"id": 1079, "name": "Fiber, total dietary", "unitName": "g"}, "amount": 0.0},
+    {"nutrient": {"id": 2000, "name": "Sugars, total including NLEA", "unitName": "g"}, "amount": 0.0},
+    {"nutrient": {"id": 1093, "name": "Sodium, Na", "unitName": "mg"}, "amount": 69.0},
+    {"nutrient": {"id": 1258, "name": "Fatty acids, total saturated", "unitName": "g"}, "amount": 0.32},
+    {"nutrient": {"id": 9999, "name": "Unknown nutrient", "unitName": "g"}, "amount": 0.0}
+  ]
+}
