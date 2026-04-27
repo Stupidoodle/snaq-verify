@@ -62,15 +62,11 @@ class Bootstrap:
             StructlogLogger,
         )
 
-        logger: LoggerPort = StructlogLogger(level=settings.LOG_LEVEL)
+        logger: LoggerPort = StructlogLogger(log_level=settings.LOG_LEVEL)
 
         from snaq_verify.infrastructure.cache.file_cache import FileCache
 
-        cache: CachePort = FileCache(
-            cache_dir=settings.CACHE_DIR,
-            ttl_seconds=settings.CACHE_TTL_DAYS * 86400,
-            logger=logger,
-        )
+        cache: CachePort = FileCache(cache_dir=settings.CACHE_DIR)
 
         from snaq_verify.infrastructure.sources.usda_client import USDAClient
 
@@ -89,8 +85,11 @@ class Bootstrap:
         from snaq_verify.infrastructure.sources.tavily_client import TavilyClient
 
         tavily: TavilyClientPort = TavilyClient(
-            settings=settings, logger=logger, cache=cache,
+            api_key=settings.TAVILY_API_KEY, cache=cache, logger=logger,
         )
+
+        from snaq_verify.application.tools.web_search_nutrition import configure_web_search
+        configure_web_search(tavily)
 
         from snaq_verify.infrastructure.agents.verifier_agent_adapter import (
             VerifierAgentAdapter,
