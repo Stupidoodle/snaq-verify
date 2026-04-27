@@ -10,7 +10,7 @@ from snaq_verify.domain.ports.logger_port import LoggerPort
 from snaq_verify.domain.ports.pipeline_step_port import PipelineStep
 from snaq_verify.domain.ports.verifier_agent_port import VerifierAgentPort
 
-_DEFAULT_CONCURRENCY = 3
+_DEFAULT_CONCURRENCY = 1
 
 
 class VerifyStep(PipelineStep):
