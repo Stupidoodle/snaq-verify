@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from agents import Agent, RunContextWrapper, function_tool
 
@@ -33,6 +33,9 @@ from snaq_verify.domain.ports.usda_client_port import USDAClientPort
 from snaq_verify.infrastructure.agents.guardrails.atwater_output_guardrail import (
     atwater_output_guardrail,
 )
+from snaq_verify.infrastructure.agents.guardrails.confidence_output_guardrail import (
+    confidence_output_guardrail,
+)
 from snaq_verify.infrastructure.agents.guardrails.schema_output_guardrail import (
     schema_output_guardrail,
 )
@@ -44,17 +47,24 @@ from snaq_verify.infrastructure.agents.guardrails.schema_output_guardrail import
 
 @dataclass
 class VerifierContext:
-    """Holds the IO ports for the verifier agent's tool closures.
+    """Holds the IO ports and mutable state for the verifier agent's tool closures.
 
-    Passed to ``Runner.run(..., context=VerifierContext(...))`` so that
-    each tool can reach the real adapters without importing them globally
-    (which would break test isolation).
+    Passed to ``Runner.run(..., context=VerifierContext(...))`` so that each
+    tool can reach the real adapters without importing them globally (which
+    would break test isolation).
+
+    ``tool_events`` is populated by each IO tool whenever it observes a
+    notable outcome — a 404, an empty result set, a web-search fallback.
+    After the run completes, the adapter copies ``tool_events`` into the
+    ``ItemVerification.notes`` field, replacing any LLM-generated text with
+    a mechanically-derived audit trail.
     """
 
     usda: USDAClientPort
     off: OpenFoodFactsClientPort
     tavily: TavilyClientPort
     settings: Settings
+    tool_events: list[str] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -88,7 +98,12 @@ async def search_usda(
         dt: USDADataType | None = USDADataType(data_type)
     except ValueError:
         dt = None
-    return await ctx.context.usda.search(query, data_type=dt)
+    results = await ctx.context.usda.search(query, data_type=dt)
+    if not results:
+        ctx.context.tool_events.append(
+            f"usda.search.no_results query={query!r} data_type={data_type!r}",
+        )
+    return results
 
 
 @function_tool
@@ -105,7 +120,13 @@ async def get_usda_food(
     Returns:
         ``USDACandidate`` with ``nutrition_per_100g`` fully populated.
     """
-    return await ctx.context.usda.get_food(fdc_id)
+    try:
+        return await ctx.context.usda.get_food(fdc_id)
+    except Exception as exc:
+        ctx.context.tool_events.append(
+            f"usda.get_food.error fdc_id={fdc_id} error={type(exc).__name__}",
+        )
+        raise
 
 
 @function_tool
@@ -124,7 +145,12 @@ async def lookup_off_by_barcode(
         A ``None`` return is normal for region-specific products — fall back
         to ``search_off_by_name``.
     """
-    return await ctx.context.off.lookup_by_barcode(barcode)
+    result = await ctx.context.off.lookup_by_barcode(barcode)
+    if result is None:
+        ctx.context.tool_events.append(
+            f"off.lookup_by_barcode.not_found barcode={barcode!r}",
+        )
+    return result
 
 
 @function_tool
@@ -143,7 +169,12 @@ async def search_off_by_name(
     Returns:
         List of matching ``OFFProduct`` objects ordered by OFF relevance.
     """
-    return await ctx.context.off.search_by_name(name, brand=brand)
+    results = await ctx.context.off.search_by_name(name, brand=brand)
+    if not results:
+        ctx.context.tool_events.append(
+            f"off.search_by_name.no_results name={name!r} brand={brand!r}",
+        )
+    return results
 
 
 @function_tool
@@ -163,6 +194,7 @@ async def search_tavily(
     Returns:
         Ranked ``WebSnippet`` objects with ``title``, ``url``, and ``content``.
     """
+    ctx.context.tool_events.append(f"tavily.search query={query!r}")
     return await ctx.context.tavily.search(query)
 
 
@@ -222,14 +254,25 @@ Follow these steps IN ORDER:
 
 7. OVERALL VERDICT + CONFIDENCE
    - Item verdict = worst-case across all source bundles.
-   - Confidence:
-       HIGH  — ≥2 sources, item verdict is MATCH or MINOR_DISCREPANCY
-       MEDIUM — ≥2 sources with disagreement, or 1 source with MAJOR_DISCREPANCY
-       LOW   — only 1 source with MATCH/MINOR, or no data from any source
+   - Confidence (deterministic — compute from evidence, do not guess):
+       HIGH   — ≥2 evidence sources AND top candidate match_score ≥ 0.85 AND
+                item verdict is MATCH or MINOR_DISCREPANCY (sources broadly agree)
+       MEDIUM — top candidate match_score ≥ 0.70 OR ≥2 sources used
+                (even if they disagree on magnitude)
+       LOW    — everything else (0–1 source with low score, no data, etc.)
+     A guardrail will verify your confidence choice and trip if it does not
+     match these rules exactly. Apply the rule as written.
 
 8. PROPOSED CORRECTION
    - If item verdict is MAJOR_DISCREPANCY and a USDA Foundation candidate was found,
-     set proposed_correction to that candidate's nutrition_per_100g.
+     consider setting proposed_correction to that candidate's nutrition_per_100g.
+   - ONLY set proposed_correction if ALL 8 nutrition fields in that candidate are
+     confidently recovered. A field is NOT confidently recovered if it would be
+     0.0 as a placeholder for "unknown" — 0.0 is only valid when the food
+     genuinely contains none of that nutrient (e.g. carbohydrates_g=0.0 for
+     plain meat). If any field is uncertain, set proposed_correction = None.
+     A partial correction filled with zero placeholders is more misleading than
+     no correction at all.
 
 9. SUMMARY
    - Call format_human_summary(
@@ -238,7 +281,13 @@ Follow these steps IN ORDER:
        evidence_count=<number of selected candidates>
      ).
 
-10. RETURN a complete ItemVerification with ALL fields populated.
+10. NOTES
+    - Always set notes: [] in your output.
+    - Notes are populated automatically by the system from tool-call events.
+    - Do NOT write anything in notes — not tool errors, not strategy descriptions,
+      not search explanations. Leave notes: [] unconditionally.
+
+11. RETURN a complete ItemVerification with ALL fields populated.
 """
 
 # ---------------------------------------------------------------------------
@@ -265,13 +314,15 @@ _COMPUTE_TOOLS = [
 def build_verifier_agent(settings: Settings) -> Agent[VerifierContext]:
     """Build the verifier Agent with all tools and output guardrails.
 
-    The returned agent has ``output_type=ItemVerification`` and two output
+    The returned agent has ``output_type=ItemVerification`` and three output
     guardrails:
 
     - :func:`~.guardrails.atwater_output_guardrail.atwater_output_guardrail`:
       re-derives the Atwater consistency flag to catch hallucination.
     - :func:`~.guardrails.schema_output_guardrail.schema_output_guardrail`:
       enforces structural invariants (non-empty evidence, non-blank summary).
+    - :func:`~.guardrails.confidence_output_guardrail.confidence_output_guardrail`:
+      re-derives confidence from evidence and trips on mismatch.
 
     Args:
         settings: Application settings providing the model pin.
@@ -283,8 +334,12 @@ def build_verifier_agent(settings: Settings) -> Agent[VerifierContext]:
     return Agent(
         name="verifier",
         instructions=_VERIFIER_INSTRUCTIONS,
-        tools=_IO_TOOLS + _COMPUTE_TOOLS,
+        tools=_IO_TOOLS + _COMPUTE_TOOLS,  # type: ignore[arg-type]
         output_type=ItemVerification,
-        output_guardrails=[atwater_output_guardrail, schema_output_guardrail],
+        output_guardrails=[
+            atwater_output_guardrail,
+            schema_output_guardrail,
+            confidence_output_guardrail,
+        ],
         model=settings.OPENAI_MODEL,
     )
