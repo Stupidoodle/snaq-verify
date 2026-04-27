@@ -83,5 +83,107 @@
       "sodium_mg": 36.0
     },
     "notes": "FDC Foundation entry 747447 (broccoli, raw). Input file reports 34 kcal / 2.8g protein / 7.0g carbs — all within ~10 % of USDA values. Expect MINOR_DISCREPANCY (carbs ~12 % high) or MATCH depending on thresholds."
+  },
+  {
+    "item_id": "banana-raw",
+    "item_name": "Banana, Raw",
+    "source": "USDA FoodData Central — Foundation Foods",
+    "source_url": "https://fdc.nal.usda.gov/food-details/1105314",
+    "nutrition_per_100g": {
+      "calories_kcal": 97.0,
+      "protein_g": 0.74,
+      "fat_g": 0.29,
+      "saturated_fat_g": 0.11,
+      "carbohydrates_g": 23.0,
+      "sugar_g": 15.8,
+      "fiber_g": 1.7,
+      "sodium_mg": 0.0
+    },
+    "notes": "FDC Foundation entry 1105314 (banana, raw, without peel). Input file reports 106 kcal / 27g carbs — kcal ~9 % high and carbs ~17 % high. Expect MINOR_DISCREPANCY (kcal) shading toward MAJOR on carbs."
+  },
+  {
+    "item_id": "whole-milk",
+    "item_name": "Milk, Whole, 3.25% Milkfat",
+    "source": "USDA FoodData Central — SR Legacy",
+    "source_url": "https://fdc.nal.usda.gov/food-details/171265",
+    "nutrition_per_100g": {
+      "calories_kcal": 61.0,
+      "protein_g": 3.15,
+      "fat_g": 3.25,
+      "saturated_fat_g": 1.87,
+      "carbohydrates_g": 4.80,
+      "sugar_g": 5.05,
+      "fiber_g": 0.0,
+      "sodium_mg": 44.0
+    },
+    "notes": "SR Legacy entry 171265 (fluid whole milk, 3.25 % milkfat). Input file values are close to reference — all key macros within ~3 %. Expect MATCH. Sugar slightly exceeds carbs in the SR Legacy entry due to rounding; treat as data quirk."
+  },
+  {
+    "item_id": "almonds-raw",
+    "item_name": "Almonds, Raw",
+    "source": "USDA FoodData Central — SR Legacy",
+    "source_url": "https://fdc.nal.usda.gov/food-details/169426",
+    "nutrition_per_100g": {
+      "calories_kcal": 579.0,
+      "protein_g": 21.2,
+      "fat_g": 49.9,
+      "saturated_fat_g": 3.8,
+      "carbohydrates_g": 21.6,
+      "sugar_g": 4.4,
+      "fiber_g": 12.5,
+      "sodium_mg": 1.0
+    },
+    "notes": "SR Legacy entry 169426 (almonds, dry roasted values align; raw values consistent). Input file values are accurate — all macros within 2 % of reference. Expect MATCH."
+  },
+  {
+    "item_id": "salmon-atlantic-farmed-raw",
+    "item_name": "Salmon, Atlantic, Farmed, Raw",
+    "source": "USDA FoodData Central — Foundation Foods",
+    "source_url": "https://fdc.nal.usda.gov/food-details/2684441",
+    "nutrition_per_100g": {
+      "calories_kcal": 203.0,
+      "protein_g": 20.3,
+      "fat_g": 13.1,
+      "saturated_fat_g": 2.28,
+      "carbohydrates_g": 0.0,
+      "sugar_g": 0.0,
+      "fiber_g": 0.0,
+      "sodium_mg": 49.5
+    },
+    "notes": "FDC Foundation entry 2684441 (Atlantic salmon, farmed, raw). Input file reports fat=5.2g — this is a *planted major error*; farmed Atlantic salmon is a high-fat fish averaging 13–15g fat/100g raw. Expect MAJOR_DISCREPANCY on fat and kcal. NOTE: fat content varies materially between farmed and wild-caught Atlantic salmon (farmed ~13g, wild ~8g/100g raw); this entry reflects USDA farmed figures."
+  },
+  {
+    "item_id": "fage-total-0-greek-yogurt",
+    "item_name": "Fage Total 0% Greek Yogurt",
+    "source": "Fage USA official product page",
+    "source_url": "https://usa.fage/products/yogurt/fage-total-0",
+    "nutrition_per_100g": {
+      "calories_kcal": 57.0,
+      "protein_g": 10.0,
+      "fat_g": 0.2,
+      "saturated_fat_g": 0.1,
+      "carbohydrates_g": 3.6,
+      "sugar_g": 3.6,
+      "fiber_g": 0.0,
+      "sodium_mg": 36.0
+    },
+    "notes": "Values derived from the Fage USA label (240g container: 133 kcal, 24g protein, <0.5g fat, 9g carbs / sugars, 85mg sodium) normalised to per-100g. Input file has protein=5.5g — this is a *planted major error* (real value ~10g/100g). Expect MAJOR_DISCREPANCY on protein. BARCODE NOTE: barcode 5200435000027 returns HTTP 404 on Open Food Facts; the verifier agent must fall back to search_off_by_name or web search and cite the Fage official page."
+  },
+  {
+    "item_id": "white-bread",
+    "item_name": "Bread, White, Commercially Prepared",
+    "source": "USDA FoodData Central — SR Legacy",
+    "source_url": "https://fdc.nal.usda.gov/food-details/172686",
+    "nutrition_per_100g": {
+      "calories_kcal": 265.0,
+      "protein_g": 8.9,
+      "fat_g": 3.2,
+      "saturated_fat_g": 0.7,
+      "carbohydrates_g": 49.0,
+      "sugar_g": 5.1,
+      "fiber_g": 2.4,
+      "sodium_mg": 491.0
+    },
+    "notes": "SR Legacy entry 172686 (white bread, commercially prepared). Input file reports 198 kcal — ~34 % below the reference (265 kcal); this is a *planted major error*, possibly a per-slice value mislabelled as per-100g. Expect MAJOR_DISCREPANCY on kcal and carbs."
   }
 ]
