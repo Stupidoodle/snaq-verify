@@ -26,17 +26,16 @@ def configure_web_search(client: TavilyClientPort | None) -> None:
     _tavily_client = client
 
 
-@function_tool
 async def web_search_nutrition(query: str, max_results: int = 5) -> list[WebSnippet]:
     """Search the web for nutrition information using Tavily.
 
-    This tool is the **last-resort fallback** in the verification pipeline —
+    This function is the **last-resort fallback** in the verification pipeline —
     used only when neither USDA nor Open Food Facts can supply sufficient data.
     It returns ranked content snippets that the agent can scan to extract or
     validate nutrient figures.
 
     Configure the underlying client at startup by calling
-    :func:`configure_web_search` before invoking this tool.
+    :func:`configure_web_search` before invoking this function.
 
     Args:
         query: Free-text search query.  Examples:
@@ -59,3 +58,9 @@ async def web_search_nutrition(query: str, max_results: int = 5) -> list[WebSnip
             "call configure_web_search(client) during application bootstrap."
         )
     return await _tavily_client.search(query, max_results=max_results)
+
+
+#: ``FunctionTool`` wrapper registered with the OpenAI Agents SDK.
+#: Import this name when wiring tools into an ``Agent`` instance.
+#: Import :func:`web_search_nutrition` directly for unit tests and manual calls.
+web_search_nutrition_tool = function_tool(web_search_nutrition)
