@@ -24,8 +24,8 @@ def _load(name: str) -> dict:
     return json.loads((FIXTURES / name).read_text())
 
 
-SEARCH_RESPONSE = _load("usda_search_chicken_breast.json")
-FOOD_RESPONSE = _load("usda_food_171477.json")
+SEARCH_RESPONSE = _load("usda_search_chicken_breast_synthetic.json")
+FOOD_RESPONSE = _load("usda_food_chicken_breast_raw_synthetic.json")
 EMPTY_SEARCH = _load("usda_search_empty.json")
 MISSING_NUTRIENTS = _load("usda_food_missing_nutrients.json")
 

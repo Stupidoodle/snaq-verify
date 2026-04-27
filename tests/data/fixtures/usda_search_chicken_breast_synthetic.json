@@ -1,5 +1,5 @@
 {
-  "_comment": "SYNTHETIC fixture for unit-test isolation. FDC IDs 331960 and 171477 are fabricated/mismatched (331960 404s live; 171477 is actually cooked chicken). Nutrient values are plausible raw-chicken figures. Do not treat as a recorded live API response.",
+  "_comment": "SYNTHETIC test fixture — values shaped like a real FDC search response but fabricated for test isolation. fdcId 331960 and 171477 in this file do NOT match their live API values. Do NOT treat these as authoritative USDA records.",
   "totalHits": 2,
   "currentPage": 1,
   "totalPages": 1,

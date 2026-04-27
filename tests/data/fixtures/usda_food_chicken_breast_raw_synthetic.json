@@ -1,5 +1,5 @@
 {
-  "_comment": "SYNTHETIC fixture for unit-test isolation. FDC ID 171477 is real but refers to cooked chicken (protein 31g, kcal 165). The nutrient values here are fabricated raw-chicken figures to give the USDAClient parser something to parse. Do not use as a source of authoritative nutritional data.",
+  "_comment": "SYNTHETIC test fixture — values shaped like a real FDC food-detail response but fabricated for test isolation. FDC ID 171477 on the live API is 'Chicken, broilers, breast, cooked, roasted' (not raw). Do NOT treat these nutrient values as authoritative.",
   "fdcId": 171477,
   "description": "Chicken, broilers or fryers, breast, meat only, raw",
   "dataType": "SR Legacy",
@@ -14,6 +14,6 @@
     {"nutrient": {"id": 2000, "name": "Sugars, total including NLEA", "unitName": "g"}, "amount": 0.0},
     {"nutrient": {"id": 1093, "name": "Sodium, Na", "unitName": "mg"}, "amount": 69.0},
     {"nutrient": {"id": 1258, "name": "Fatty acids, total saturated", "unitName": "g"}, "amount": 0.32},
-    {"nutrient": {"id": 9999, "name": "Unknown nutrient", "unitName": "g"}, "amount": 0.0}
+    {"nutrient": {"id": 9999, "name": "Unknown nutrient (ignored by mapper)", "unitName": "g"}, "amount": 0.0}
   ]
 }
