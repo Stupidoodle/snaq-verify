@@ -1,0 +1,19 @@
+services:
+  verify:
+    build: .
+    env_file: .env
+    volumes:
+      # Output directory — reports land here on the host.
+      - ./output:/app/output
+      # Ground-truth and test fixtures — read-only.
+      - ./tests/data:/app/tests/data:ro
+      # Input food items — read-only.
+      - ./food_items.json:/app/food_items.json:ro
+    # Default command: run full verification + eval in a single invocation.
+    # Override at runtime: docker compose run verify run --input ... --output ...
+    command: >
+      run-and-eval
+      --input /app/food_items.json
+      --output /app/output/verification_report.json
+      --eval-output /app/output/eval_report.json
+      --ground-truth /app/tests/data/ground_truth.json
