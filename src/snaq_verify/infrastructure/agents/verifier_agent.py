@@ -7,14 +7,18 @@ from dataclasses import dataclass
 from agents import Agent, RunContextWrapper, function_tool
 
 from snaq_verify.application.tools.check_atwater_consistency import (
-    check_atwater_consistency,
+    check_atwater_consistency_tool,
 )
 from snaq_verify.application.tools.compute_per_nutrient_delta import (
-    compute_per_nutrient_delta,
+    compute_per_nutrient_delta_tool,
 )
-from snaq_verify.application.tools.format_human_summary import format_human_summary
-from snaq_verify.application.tools.select_best_candidate import select_best_candidate
-from snaq_verify.application.tools.verdict_from_deltas import verdict_from_deltas
+from snaq_verify.application.tools.format_human_summary import (
+    format_human_summary_tool,
+)
+from snaq_verify.application.tools.select_best_candidate import (
+    select_best_candidate_tool,
+)
+from snaq_verify.application.tools.verdict_from_deltas import verdict_from_deltas_tool
 from snaq_verify.core.config import Settings
 from snaq_verify.domain.models.enums import USDADataType
 from snaq_verify.domain.models.item_verification import ItemVerification
@@ -250,11 +254,11 @@ _IO_TOOLS = [
 ]
 
 _COMPUTE_TOOLS = [
-    select_best_candidate,
-    compute_per_nutrient_delta,
-    verdict_from_deltas,
-    check_atwater_consistency,
-    format_human_summary,
+    select_best_candidate_tool,
+    compute_per_nutrient_delta_tool,
+    verdict_from_deltas_tool,
+    check_atwater_consistency_tool,
+    format_human_summary_tool,
 ]
 
 
