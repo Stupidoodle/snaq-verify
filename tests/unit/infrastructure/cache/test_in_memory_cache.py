@@ -163,3 +163,19 @@ def test_namespace_prefix_isolation() -> None:
     cache.set("tavily:search:chicken", ["snippet"])
     assert cache.get("usda:search:chicken") == [1, 2, 3]
     assert cache.get("tavily:search:chicken") == ["snippet"]
+
+
+# ---------------------------------------------------------------------------
+# FakeCache truthiness
+# ---------------------------------------------------------------------------
+
+
+def test_fake_cache_empty_is_truthy() -> None:
+    """FakeCache is truthy even when empty, so ``cache or FakeCache()`` is safe."""
+    from tests.fakes.fake_cache import FakeCache
+
+    cache = FakeCache()
+    assert bool(cache) is True
+    # Confirm the ``or`` idiom no longer discards the passed instance.
+    result = cache or FakeCache()
+    assert result is cache

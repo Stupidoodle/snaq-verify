@@ -11,6 +11,10 @@ class FakeCache(InMemoryCache):
     explicit (\"this test uses a fake cache\") and keeps the import story
     clean for teammates who inject ``FakeCache`` in their test modules.
 
+    **Truthiness:** always ``True``, even when empty.  This prevents the
+    common ``cache or FakeCache()`` helper pattern from silently discarding
+    a passed-in instance because an empty cache has ``len() == 0``.
+
     Example::
 
         cache = FakeCache()
@@ -22,3 +26,7 @@ class FakeCache(InMemoryCache):
         # reset between test cases:
         cache.clear()
     """
+
+    def __bool__(self) -> bool:
+        """Always truthy — an empty cache is still a valid cache instance."""
+        return True
