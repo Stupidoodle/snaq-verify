@@ -1,29 +1,42 @@
-"""Factory for the search_usda agent tool."""
+"""Tool: search USDA FoodData Central by free-text query."""
 
 from __future__ import annotations
+
+from collections.abc import Awaitable, Callable
+
+from agents import function_tool
 
 from snaq_verify.domain.models.enums import USDADataType
 from snaq_verify.domain.ports.usda_client_port import USDAClientPort
 
 
-def make_search_usda(usda: USDAClientPort):
-    """Return a raw async callable bound to *usda* for searching USDA FoodData Central.
+def make_search_usda(
+    usda: USDAClientPort,
+) -> tuple[Callable[..., Awaitable[list[dict]]], object]:  # type: ignore[type-arg]
+    """Create a USDA search tool bound to *usda*.
 
-    The returned coroutine function can be tested directly with
-    ``await tool("query")`` or wrapped with
-    ``function_tool(make_search_usda(client))`` for use in an
-    OpenAI Agents SDK ``Agent``.
+    Returns a 2-tuple of ``(raw_fn, function_tool_wrapper)``:
+
+    * ``raw_fn`` — a plain async callable; tests call this directly without
+      going through the agents tool runner.
+    * ``function_tool_wrapper`` — a :class:`~agents.FunctionTool` ready for
+      use in ``Agent(tools=[...])``.
 
     Args:
         usda: The USDA FoodData Central client adapter.
 
     Returns:
-        An async function ``search_usda(query, data_type, page_size) -> list[dict]``.
+        ``(search_usda, search_usda_tool)``
 
     Example::
 
-        tool = make_search_usda(usda_client)
-        results = await tool("chicken breast", data_type="Foundation")
+        fn, tool = make_search_usda(usda_client)
+
+        # In tests — call the raw function directly:
+        results = await fn("chicken breast", data_type="Foundation")
+
+        # In the agent adapter — register the tool:
+        agent = Agent(tools=[tool, ...])
     """
 
     async def search_usda(
@@ -56,4 +69,5 @@ def make_search_usda(usda: USDAClientPort):
         candidates = await usda.search(query, data_type=dt, page_size=page_size)
         return [c.model_dump() for c in candidates]
 
-    return search_usda
+    search_usda_tool = function_tool(search_usda)
+    return search_usda, search_usda_tool

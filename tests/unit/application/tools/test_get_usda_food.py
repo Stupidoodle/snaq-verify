@@ -1,6 +1,7 @@
-"""Tests for the get_usda_food @function_tool wrapper."""
+"""Tests for the get_usda_food tool factory."""
 
 import pytest
+from agents import FunctionTool
 
 from snaq_verify.application.tools.get_usda_food import make_get_usda_food
 from snaq_verify.domain.models.enums import USDADataType
@@ -51,9 +52,9 @@ def _candidate(
 async def test_get_usda_food_returns_candidate_dict() -> None:
     fake = FakeUSDAClient()
     fake.add_food(171477, _candidate())
-    tool = make_get_usda_food(fake)
+    fn, _ = make_get_usda_food(fake)
 
-    result = await tool(171477)
+    result = await fn(171477)
 
     assert isinstance(result, dict)
     assert result["fdc_id"] == 171477
@@ -63,9 +64,9 @@ async def test_get_usda_food_returns_candidate_dict() -> None:
 async def test_get_usda_food_nutrition_fields_present() -> None:
     fake = FakeUSDAClient()
     fake.add_food(171477, _candidate())
-    tool = make_get_usda_food(fake)
+    fn, _ = make_get_usda_food(fake)
 
-    result = await tool(171477)
+    result = await fn(171477)
 
     n = result["nutrition_per_100g"]
     assert n["protein_g"] == 23.2
@@ -77,34 +78,43 @@ async def test_get_usda_food_nutrition_fields_present() -> None:
 async def test_get_usda_food_data_type_serialized() -> None:
     fake = FakeUSDAClient()
     fake.add_food(100, _candidate(fdc_id=100, data_type=USDADataType.FOUNDATION))
-    tool = make_get_usda_food(fake)
+    fn, _ = make_get_usda_food(fake)
 
-    result = await tool(100)
+    result = await fn(100)
 
     assert result["data_type"] == "Foundation"
 
 
 async def test_get_usda_food_propagates_not_found_error() -> None:
     fake = FakeUSDAClient()  # nothing registered
-    tool = make_get_usda_food(fake)
+    fn, _ = make_get_usda_food(fake)
 
     with pytest.raises(KeyError):
-        await tool(999999)
+        await fn(999999)
 
 
 async def test_get_usda_food_propagates_simulated_error() -> None:
     fake = FakeUSDAClient(raise_on_fdc_id=99)
-    tool = make_get_usda_food(fake)
+    fn, _ = make_get_usda_food(fake)
 
     with pytest.raises(RuntimeError, match="simulated error"):
-        await tool(99)
+        await fn(99)
 
 
 async def test_get_usda_food_records_call() -> None:
     fake = FakeUSDAClient()
     fake.add_food(171477, _candidate())
-    tool = make_get_usda_food(fake)
+    fn, _ = make_get_usda_food(fake)
 
-    await tool(171477)
+    await fn(171477)
 
     assert 171477 in fake.get_food_calls
+
+
+def test_tool_export_is_function_tool() -> None:
+    """Factory exports a FunctionTool suitable for Agent(tools=[...])."""
+    fake = FakeUSDAClient()
+    _, tool = make_get_usda_food(fake)
+
+    assert isinstance(tool, FunctionTool)
+    assert tool.name == "get_usda_food"

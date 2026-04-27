@@ -1,28 +1,40 @@
-"""Factory for the get_usda_food agent tool."""
+"""Tool: fetch full nutrition for a single USDA food by FDC ID."""
 
 from __future__ import annotations
+
+from collections.abc import Awaitable, Callable
+
+from agents import function_tool
 
 from snaq_verify.domain.ports.usda_client_port import USDAClientPort
 
 
-def make_get_usda_food(usda: USDAClientPort):
-    """Return a raw async callable bound to *usda* for fetching a USDA food by FDC ID.
+def make_get_usda_food(
+    usda: USDAClientPort,
+) -> tuple[Callable[..., Awaitable[dict]], object]:  # type: ignore[type-arg]
+    """Create a USDA food-detail tool bound to *usda*.
 
-    The returned coroutine function can be tested directly with
-    ``await tool(fdc_id)`` or wrapped with
-    ``function_tool(make_get_usda_food(client))`` for use in an
-    OpenAI Agents SDK ``Agent``.
+    Returns a 2-tuple of ``(raw_fn, function_tool_wrapper)``:
+
+    * ``raw_fn`` — a plain async callable; tests call this directly.
+    * ``function_tool_wrapper`` — a :class:`~agents.FunctionTool` ready for
+      use in ``Agent(tools=[...])``.
 
     Args:
         usda: The USDA FoodData Central client adapter.
 
     Returns:
-        An async function ``get_usda_food(fdc_id: int) -> dict``.
+        ``(get_usda_food, get_usda_food_tool)``
 
     Example::
 
-        tool = make_get_usda_food(usda_client)
-        food = await tool(171477)
+        fn, tool = make_get_usda_food(usda_client)
+
+        # In tests:
+        food = await fn(171477)
+
+        # In the agent adapter:
+        agent = Agent(tools=[tool, ...])
     """
 
     async def get_usda_food(fdc_id: int) -> dict:  # type: ignore[type-arg]
@@ -50,4 +62,5 @@ def make_get_usda_food(usda: USDAClientPort):
         candidate = await usda.get_food(fdc_id)
         return candidate.model_dump()
 
-    return get_usda_food
+    get_usda_food_tool = function_tool(get_usda_food)
+    return get_usda_food, get_usda_food_tool
