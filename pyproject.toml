@@ -48,6 +48,7 @@ select = ["E", "F", "C", "D", "B", "I", "Q", "COM812"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["D"]
+"**/__init__.py" = ["D104"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -68,6 +69,12 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = ["openfoodfacts.*", "tavily.*"]
+ignore_missing_imports = true
+
+# Phase 2 adapters not yet implemented. bootstrap.py imports them lazily.
+# Remove this override once every infrastructure/* adapter file lands.
+[[tool.mypy.overrides]]
+module = ["snaq_verify.infrastructure.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

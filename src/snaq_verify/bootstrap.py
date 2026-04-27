@@ -75,7 +75,7 @@ class Bootstrap:
         from snaq_verify.infrastructure.sources.usda_client import USDAClient
 
         usda: USDAClientPort = USDAClient(
-            settings=settings, logger=logger, cache=cache
+            settings=settings, logger=logger, cache=cache,
         )
 
         from snaq_verify.infrastructure.sources.open_food_facts_client import (
@@ -83,13 +83,13 @@ class Bootstrap:
         )
 
         off: OpenFoodFactsClientPort = OpenFoodFactsClient(
-            settings=settings, logger=logger, cache=cache
+            settings=settings, logger=logger, cache=cache,
         )
 
         from snaq_verify.infrastructure.sources.tavily_client import TavilyClient
 
         tavily: TavilyClientPort = TavilyClient(
-            settings=settings, logger=logger, cache=cache
+            settings=settings, logger=logger, cache=cache,
         )
 
         from snaq_verify.infrastructure.agents.verifier_agent_adapter import (
@@ -109,7 +109,7 @@ class Bootstrap:
         )
 
         judge_agent: JudgeAgentPort = JudgeAgentAdapter(
-            settings=settings, logger=logger
+            settings=settings, logger=logger,
         )
 
         runner = PipelineRunner(logger=logger)
