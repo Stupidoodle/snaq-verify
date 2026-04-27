@@ -2,7 +2,18 @@
 
 import asyncio
 from collections.abc import Callable
+from datetime import UTC, datetime
 
+from agents.exceptions import (
+    InputGuardrailTripwireTriggered,
+    OutputGuardrailTripwireTriggered,
+)
+
+from snaq_verify.application.tools.check_atwater_consistency import (
+    check_atwater_consistency,
+)
+from snaq_verify.domain.models.atwater_check import AtwaterCheck
+from snaq_verify.domain.models.enums import ConfidenceLevel, Verdict
 from snaq_verify.domain.models.food_item import FoodItem
 from snaq_verify.domain.models.item_verification import ItemVerification
 from snaq_verify.domain.models.pipeline_state import PipelineState
@@ -11,6 +22,39 @@ from snaq_verify.domain.ports.pipeline_step_port import PipelineStep
 from snaq_verify.domain.ports.verifier_agent_port import VerifierAgentPort
 
 _DEFAULT_CONCURRENCY = 1
+
+
+def _fallback_verification(
+    item: FoodItem, reason: str, exc: Exception,
+) -> ItemVerification:
+    """Build a degraded ItemVerification when the agent fails for one item.
+
+    Used to keep the pipeline moving when a guardrail tripwire fires or the
+    agent raises an unexpected error — better to flag the item as
+    LOW_CONFIDENCE / NO_DATA and finish the batch than to abort the entire
+    11-item run.
+    """
+    atwater = check_atwater_consistency(
+        item.nutrition_per_100g, tolerance_pct=15.0,
+    )
+    return ItemVerification(
+        item_id=item.id,
+        item_name=item.name,
+        reported_nutrition=item.nutrition_per_100g,
+        verdict=Verdict.NO_DATA,
+        confidence=ConfidenceLevel.LOW,
+        evidence=[],
+        proposed_correction=None,
+        atwater_check_input=AtwaterCheck.model_validate(atwater.model_dump()),
+        summary=(
+            f"{item.name}: agent run failed ({reason}). "
+            f"No verdict produced; pipeline continued."
+        ),
+        notes=[
+            f"agent_failure_{reason}: {type(exc).__name__}: {str(exc)[:200]}",
+            f"timestamp_utc: {datetime.now(UTC).isoformat()}",
+        ],
+    )
 
 
 class VerifyStep(PipelineStep):
@@ -73,7 +117,26 @@ class VerifyStep(PipelineStep):
         async def _verify_one(idx: int, item: FoodItem) -> None:
             async with semaphore:
                 self._logger.info("verify.item_start", item_id=item.id, index=idx)
-                verification = await self._verifier_agent.verify(item)
+                try:
+                    verification = await self._verifier_agent.verify(item)
+                except (
+                    OutputGuardrailTripwireTriggered,
+                    InputGuardrailTripwireTriggered,
+                ) as exc:
+                    self._logger.warning(
+                        "verify.item_guardrail_trip",
+                        item_id=item.id,
+                        error=str(exc)[:200],
+                    )
+                    verification = _fallback_verification(item, "guardrail_trip", exc)
+                except Exception as exc:  # noqa: BLE001 — pipeline must not abort
+                    self._logger.error(
+                        "verify.item_error",
+                        item_id=item.id,
+                        error_type=type(exc).__name__,
+                        error=str(exc)[:200],
+                    )
+                    verification = _fallback_verification(item, "agent_error", exc)
                 result_slots[idx] = verification
                 self._logger.info(
                     "verify.item_done",
@@ -84,7 +147,7 @@ class VerifyStep(PipelineStep):
                     self._on_item_complete(item.id)
 
         await asyncio.gather(
-            *[_verify_one(i, item) for i, item in enumerate(state.items)]
+            *[_verify_one(i, item) for i, item in enumerate(state.items)],
         )
 
         # Reconstruct in input order.

@@ -89,14 +89,26 @@ async def test_uses_fixed_result_from_agent() -> None:
 # ---------------------------------------------------------------------------
 
 
-async def test_agent_error_propagates() -> None:
-    """RuntimeError from the agent propagates to the caller."""
+async def test_agent_error_produces_fallback_and_continues() -> None:
+    """A RuntimeError from the agent is caught — the failing item gets a
+    NO_DATA fallback verification with an `agent_failure_agent_error` note,
+    and the remaining items in the batch still complete. Aborting the whole
+    11-item run because one item flapped is the wrong default for a
+    verification system.
+    """
     items = [make_food_item(item_id="bad"), make_food_item(item_id="good")]
     agent = FakeVerifierAgent(raise_for_id="bad")
 
     step = VerifyStep(verifier_agent=agent, logger=FakeLogger(), concurrency=1)
-    with pytest.raises(RuntimeError, match="bad"):
-        await step.run(PipelineState(items=items))
+    result = await step.run(PipelineState(items=items))
+
+    assert len(result.verifications) == 2
+    bad, good = result.verifications
+    assert bad.item_id == "bad"
+    assert bad.verdict == Verdict.NO_DATA
+    assert any("agent_failure_agent_error" in n for n in bad.notes)
+    assert good.item_id == "good"
+    assert good.verdict != Verdict.NO_DATA  # the unaffected item was processed normally
 
 
 # ---------------------------------------------------------------------------
