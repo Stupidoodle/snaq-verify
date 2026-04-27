@@ -1,5 +1,7 @@
 """Atwater equation sanity check for a nutrition entry."""
 
+from agents import function_tool
+
 from snaq_verify.domain.models.atwater_check import AtwaterCheck
 from snaq_verify.domain.models.food_item import NutritionPer100g
 
@@ -50,3 +52,6 @@ def check_atwater_consistency(
         relative_delta_pct=relative_delta_pct,
         is_consistent=is_consistent,
     )
+
+
+check_atwater_consistency_tool = function_tool(check_atwater_consistency)

@@ -1,5 +1,7 @@
 """Select the best-matching candidate from a list — pure deterministic, no IO."""
 
+from agents import function_tool
+
 from snaq_verify.application.tools.score_candidate_match import score_candidate_match
 from snaq_verify.domain.models.food_item import FoodItem
 from snaq_verify.domain.models.source_lookup import SelectedCandidate
@@ -41,3 +43,6 @@ def select_best_candidate(
     if best_score >= min_score:
         return best_candidate
     return None
+
+
+select_best_candidate_tool = function_tool(select_best_candidate)

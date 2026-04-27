@@ -1,5 +1,7 @@
 """Assign categorical verdicts to nutrient deltas and roll up an item verdict."""
 
+from agents import function_tool
+
 from snaq_verify.domain.models.enums import Verdict
 from snaq_verify.domain.models.nutrient_comparison import (
     ItemVerdictBundle,
@@ -76,3 +78,6 @@ def verdict_from_deltas(
             worst = v
 
     return ItemVerdictBundle(per_nutrient=per_nutrient, item_verdict=worst)
+
+
+verdict_from_deltas_tool = function_tool(verdict_from_deltas)

@@ -1,5 +1,7 @@
 """Compute per-nutrient deltas between reported and observed nutrition."""
 
+from agents import function_tool
+
 from snaq_verify.domain.models.food_item import NutritionPer100g
 from snaq_verify.domain.models.nutrient_comparison import NutrientDelta
 
@@ -63,3 +65,6 @@ def compute_per_nutrient_delta(
             )
         )
     return deltas
+
+
+compute_per_nutrient_delta_tool = function_tool(compute_per_nutrient_delta)

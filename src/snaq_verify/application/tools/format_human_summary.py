@@ -1,5 +1,7 @@
 """Format a human-readable summary for a food-item verification result."""
 
+from agents import function_tool
+
 from snaq_verify.domain.models.enums import Verdict
 from snaq_verify.domain.models.food_item import FoodItem
 from snaq_verify.domain.models.nutrient_comparison import ItemVerdictBundle
@@ -44,3 +46,6 @@ def format_human_summary(
         f"Overall verdict: {verdict_label}. "
         f"{flagged} nutrient(s) flagged."
     )
+
+
+format_human_summary_tool = function_tool(format_human_summary)

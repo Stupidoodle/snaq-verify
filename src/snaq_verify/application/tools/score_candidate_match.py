@@ -1,5 +1,7 @@
 """Candidate-match scoring tool — pure deterministic, no IO."""
 
+from agents import function_tool
+
 from snaq_verify.domain.models.food_item import FoodItem
 from snaq_verify.domain.models.source_lookup import SelectedCandidate
 
@@ -95,3 +97,8 @@ def score_candidate_match(item: FoodItem, candidate: SelectedCandidate) -> float
     )
 
     return min(max(total, 0.0), 1.0)
+
+
+# Pre-built FunctionTool for use in Agent(tools=[...]).
+# Tests call `score_candidate_match(...)` directly; agent-domain imports this.
+score_candidate_match_tool = function_tool(score_candidate_match)
