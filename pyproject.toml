@@ -1,0 +1,78 @@
+[project]
+name = "snaq-verify"
+version = "0.1.0"
+description = "Deterministic agent-orchestrated nutrition verification system."
+readme = "README.md"
+authors = [
+    { name = "Bryan Tran", email = "bryan.tran053@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "httpx>=0.28.1",
+    "openai>=2.32.0",
+    "openai-agents>=0.14.6",
+    "openfoodfacts>=5.0.1",
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
+    "python-dotenv>=1.2.2",
+    "rich>=15.0.0",
+    "structlog>=25.5.0",
+    "tavily-python>=0.7.24",
+    "typer>=0.25.0",
+]
+
+[project.scripts]
+snaq-verify = "snaq_verify.cli.main:app"
+
+[build-system]
+requires = ["uv_build>=0.10.8,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.2",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.1.0",
+    "respx>=0.23.1",
+    "ruff>=0.15.12",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "C", "D", "B", "I", "Q", "COM812"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+
+[tool.ruff.lint.isort]
+known-first-party = ["snaq_verify"]
+
+[tool.mypy]
+mypy_path = "src"
+strict_equality = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["openfoodfacts.*", "tavily.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests that hit real APIs (deselect with '-m \"not integration\"')",
+]
