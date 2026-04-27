@@ -1,24 +1,23 @@
-"""Tool: fetch full nutrition for a single USDA food by FDC ID."""
+"""Factory for the get_usda_food agent tool."""
 
-from agents import function_tool
+from __future__ import annotations
 
 from snaq_verify.domain.ports.usda_client_port import USDAClientPort
 
 
 def make_get_usda_food(usda: USDAClientPort):
-    """Create a USDA food-detail tool bound to *usda*.
+    """Return a raw async callable bound to *usda* for fetching a USDA food by FDC ID.
 
-    Returns a ``@function_tool``-decorated async callable that fetches the
-    complete nutrient profile for a given FDC ID (the client is pre-bound
-    via closure).
+    The returned coroutine function can be tested directly with
+    ``await tool(fdc_id)`` or wrapped with
+    ``function_tool(make_get_usda_food(client))`` for use in an
+    OpenAI Agents SDK ``Agent``.
 
     Args:
         usda: The USDA FoodData Central client adapter.
 
     Returns:
-        An async ``@function_tool`` that accepts ``fdc_id: int`` and returns
-        a serialized ``USDACandidate`` dict with ``nutrition_per_100g``
-        fully populated.
+        An async function ``get_usda_food(fdc_id: int) -> dict``.
 
     Example::
 
@@ -26,8 +25,7 @@ def make_get_usda_food(usda: USDAClientPort):
         food = await tool(171477)
     """
 
-    @function_tool
-    async def get_usda_food(fdc_id: int) -> dict:
+    async def get_usda_food(fdc_id: int) -> dict:  # type: ignore[type-arg]
         """Fetch the complete nutrient profile for a USDA FDC food item.
 
         Use this after ``search_usda`` to retrieve the authoritative
