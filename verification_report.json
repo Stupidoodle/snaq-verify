@@ -1,0 +1,1704 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-28T00:51:32.212708Z",
+    "input_count": 11,
+    "flag_count": 9,
+    "model": "gpt-5.4-mini",
+    "snaq_verify_version": "0.1.0"
+  },
+  "items": [
+    {
+      "item_id": "chicken-breast-raw",
+      "item_name": "Chicken Breast, Skinless, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 165.0,
+        "protein_g": 31.0,
+        "fat_g": 3.6,
+        "saturated_fat_g": 1.0,
+        "carbohydrates_g": 0.0,
+        "sugar_g": 0.0,
+        "fiber_g": 0.0,
+        "sodium_mg": 74.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "2646170",
+            "source_name": "Chicken, breast, boneless, skinless, raw",
+            "nutrition_per_100g": {
+              "calories_kcal": 0.0,
+              "protein_g": 22.525,
+              "fat_g": 1.934,
+              "saturated_fat_g": 0.3488,
+              "carbohydrates_g": 0.0,
+              "sugar_g": 0.0,
+              "fiber_g": 0.0,
+              "sodium_mg": 65.75
+            },
+            "match_score": 1.0,
+            "notes": null
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 165.0,
+                  "observed": 0.0,
+                  "absolute_delta": 165.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 31.0,
+                  "observed": 22.525,
+                  "absolute_delta": 8.475000000000001,
+                  "relative_delta_pct": 37.624861265260826
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 3.6,
+                  "observed": 1.934,
+                  "absolute_delta": 1.6660000000000001,
+                  "relative_delta_pct": 86.14270941054811
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 1.0,
+                  "observed": 0.3488,
+                  "absolute_delta": 0.6512,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 74.0,
+                  "observed": 65.75,
+                  "absolute_delta": 8.25,
+                  "relative_delta_pct": 12.547528517110266
+                },
+                "verdict": "minor_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 165.0,
+          "protein_g": 31.0,
+          "fat_g": 3.6,
+          "saturated_fat_g": 1.0,
+          "carbohydrates_g": 0.0,
+          "sugar_g": 0.0,
+          "fiber_g": 0.0,
+          "sodium_mg": 74.0
+        },
+        "expected_kcal": 156.4,
+        "reported_kcal": 165.0,
+        "absolute_delta": 8.599999999999994,
+        "relative_delta_pct": 5.212121212121209,
+        "is_consistent": true
+      },
+      "summary": "Chicken Breast, Skinless, Raw: cross-checked against 1 source(s). Overall verdict: major_discrepancy. 5 nutrient(s) flagged.",
+      "reasoning": "**Searching USDA foundation**\n\nI need to look into tools for this. My first step is to search for information regarding the USDA foundation. I want to confirm I’m using reliable sources to gather accurate details. It’s all about getting the information right to help meet the user's request effectively. Let's see what I can find to work with!\n\n**Choosing the best options**\n\nI need to select the best option from the available sources. The USDA is the only one, so for the other candidates, I might consider Great Value or a generic brand. I’ll use a function to select the best candidate. It seems like I should focus on maybe the top three options since I've already returned several in the search results. So, let's get to selecting the best choices!\n\n**Finalizing JSON Schema**\n\nI need to finalize the JSON to match the required schema, and my confidence level is medium right now. The evidence for my selection might just be a candidate from the USDA. I’m also proposing a correction to keep it null. Remember, I need to keep my reasoning concise and under 400 characters. I’ll make sure everything aligns with the expectations!",
+      "notes": []
+    },
+    {
+      "item_id": "banana-raw",
+      "item_name": "Banana, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 89.0,
+        "protein_g": 1.1,
+        "fat_g": 0.3,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 23.0,
+        "sugar_g": 12.2,
+        "fiber_g": 2.6,
+        "sodium_mg": 1.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "1105073",
+            "source_name": "Bananas, overripe, raw",
+            "nutrition_per_100g": {
+              "calories_kcal": 85.0,
+              "protein_g": 0.73,
+              "fat_g": 0.22,
+              "saturated_fat_g": 0.0,
+              "carbohydrates_g": 20.1,
+              "sugar_g": 0.0,
+              "fiber_g": 1.7,
+              "sodium_mg": 0.0
+            },
+            "match_score": 0.82,
+            "notes": null
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 89.0,
+                  "observed": 85.0,
+                  "absolute_delta": 4.0,
+                  "relative_delta_pct": 4.705882352941177
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 1.1,
+                  "observed": 0.73,
+                  "absolute_delta": 0.37,
+                  "relative_delta_pct": 50.68493150684933
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 0.3,
+                  "observed": 0.22,
+                  "absolute_delta": 0.08,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 0.1,
+                  "observed": 0.0,
+                  "absolute_delta": 0.1,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 23.0,
+                  "observed": 20.1,
+                  "absolute_delta": 2.8999999999999986,
+                  "relative_delta_pct": 14.427860696517406
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 12.2,
+                  "observed": 0.0,
+                  "absolute_delta": 12.2,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 2.6,
+                  "observed": 1.7,
+                  "absolute_delta": 0.9000000000000001,
+                  "relative_delta_pct": 52.941176470588246
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 1.0,
+                  "observed": 0.0,
+                  "absolute_delta": 1.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        },
+        {
+          "source": "web",
+          "candidate": {
+            "source": "web",
+            "source_id": "https://foods.fatsecret.com/calories-nutrition/usda/bananas?portionid=58486&portionamount=100.000",
+            "source_name": "Calories in 100 g of Bananas and Nutrition Facts",
+            "nutrition_per_100g": {
+              "calories_kcal": 89.0,
+              "protein_g": 1.09,
+              "fat_g": 0.33,
+              "saturated_fat_g": 0.112,
+              "carbohydrates_g": 22.84,
+              "sugar_g": 12.23,
+              "fiber_g": 2.6,
+              "sodium_mg": 1.0
+            },
+            "match_score": 0.98,
+            "notes": "snippet"
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 89.0,
+                  "observed": 89.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": 0.0
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 1.1,
+                  "observed": 1.09,
+                  "absolute_delta": 0.010000000000000009,
+                  "relative_delta_pct": 0.9174311926605512
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 0.3,
+                  "observed": 0.33,
+                  "absolute_delta": 0.030000000000000027,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 0.1,
+                  "observed": 0.112,
+                  "absolute_delta": 0.011999999999999997,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 23.0,
+                  "observed": 22.84,
+                  "absolute_delta": 0.16000000000000014,
+                  "relative_delta_pct": 0.7005253940455347
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 12.2,
+                  "observed": 12.23,
+                  "absolute_delta": 0.030000000000001137,
+                  "relative_delta_pct": -0.24529844644318183
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 2.6,
+                  "observed": 2.6,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": 0.0
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 1.0,
+                  "observed": 1.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": 0.0
+                },
+                "verdict": "match"
+              }
+            ],
+            "item_verdict": "match"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 89.0,
+          "protein_g": 1.1,
+          "fat_g": 0.3,
+          "saturated_fat_g": 0.1,
+          "carbohydrates_g": 23.0,
+          "sugar_g": 12.2,
+          "fiber_g": 2.6,
+          "sodium_mg": 1.0
+        },
+        "expected_kcal": 99.10000000000001,
+        "reported_kcal": 89.0,
+        "absolute_delta": 10.100000000000009,
+        "relative_delta_pct": 11.348314606741583,
+        "is_consistent": true
+      },
+      "summary": "Banana, Raw: cross-checked against 2 source(s). Overall verdict: major_discrepancy. 5 nutrient(s) flagged.",
+      "reasoning": "**Considering candidate results**\n\nIt seems like I might need to look for SR Legacy. But if I find fewer than 2 results, that won't help. I think I should focus on getting the top 3 candidates using the get_usda_food function for more promising options. This approach should help narrow down the choices effectively, allowing me to better assist with whatever analysis is needed about these candidates.\n\n**Considering web fallback**\n\nI see that there’s no barcode, so I need a fallback option. If I have fewer than two hydrated candidates from USDA and OFF, I should definitely turn to the web. It looks like I have two hydrated options, but only one is valid from USDA. The other one seems irrelevant. So, it makes sense to search online to find more information or suitable candidates. Let’s try searching for \"tavily\" to find what I need!\n\n**Selecting best candidates**\n\nI need to choose the best candidates, focusing on USDA candidate 1105073 and potentially a web source. I could compare data from the USDA and FatSecret. However, I notice that NutritionValue has poor details, so I should stick with the FatSecret snippet since it has all the macros. I'll select candidates separately per source. For USDA, I'm working with 1105073, and for the web, it’ll be from FatSecret. Let's aim for at least a min_score of 0.5.\n\n**Considering evidence sources**\n\nI think I need at least one piece of evidence, but my confidence in finding it is low to medium. I’m considering selecting the best candidate from the web, but first, I need to ensure the candidate shape is right. Using fatsecret snippet values sounds like a plan since the tool returns snippet text instead of structured data. I just need to avoid fabricating numeric values while extracting what I can. For the USDA candidate, I’ll use the specific code, but maybe I should skip the best candidate selection and go with a single candidate for simplicity.\n\n**Evaluating candidate selection**\n\nI’m pondering whether select_best_candidate expects a list from the internal model instead of manually inputting. If it returns none, I might need to use direct candidates, but I still have to provide evidence. I think I'll aim to use the manually selected candidates based on available sources. The tool failure isn’t critical, though I do need to compute delta for both the USDA candidate and the web candidate. Let’s go ahead and compute those!\n\n**Summarizing candidate evidence**\n\nI need to create a summary based on the evidence from maybe two selected candidates. However, it looks like my function to select the best candidate returned none, which is confusing. Still, I have two sources of evidence to work with. I’ll make sure to format the summary in a way that presents the worst-case scenario related to USDA guidelines. I want to ensure it's clear and useful for the next steps!",
+      "notes": [
+        "usda.get_food.error fdc_id=1105314 error=HTTPStatusError",
+        "tavily.search query='Banana, Raw nutrition per 100g'"
+      ]
+    },
+    {
+      "item_id": "broccoli-raw",
+      "item_name": "Broccoli, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 34.0,
+        "protein_g": 2.8,
+        "fat_g": 0.4,
+        "saturated_fat_g": 0.0,
+        "carbohydrates_g": 7.0,
+        "sugar_g": 1.7,
+        "fiber_g": 2.6,
+        "sodium_mg": 33.0
+      },
+      "verdict": "minor_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "747447",
+            "source_name": "Broccoli, raw",
+            "nutrition_per_100g": {
+              "calories_kcal": 31.0,
+              "protein_g": 2.57,
+              "fat_g": 0.34,
+              "saturated_fat_g": 0.039,
+              "carbohydrates_g": 6.27,
+              "sugar_g": 0.0,
+              "fiber_g": 2.4,
+              "sodium_mg": 36.0
+            },
+            "match_score": 0.99,
+            "notes": "USDA search result"
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 34.0,
+                  "observed": 31.0,
+                  "absolute_delta": 3.0,
+                  "relative_delta_pct": 9.67741935483871
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 2.8,
+                  "observed": 2.57,
+                  "absolute_delta": 0.22999999999999998,
+                  "relative_delta_pct": 8.949416342412452
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 0.4,
+                  "observed": 0.34,
+                  "absolute_delta": 0.06,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 0.0,
+                  "observed": 0.039,
+                  "absolute_delta": 0.039,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 7.0,
+                  "observed": 6.27,
+                  "absolute_delta": 0.7300000000000004,
+                  "relative_delta_pct": 11.642743221690598
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 1.7,
+                  "observed": 0.0,
+                  "absolute_delta": 1.7,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 2.6,
+                  "observed": 2.4,
+                  "absolute_delta": 0.20000000000000018,
+                  "relative_delta_pct": 8.333333333333341
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 33.0,
+                  "observed": 36.0,
+                  "absolute_delta": 3.0,
+                  "relative_delta_pct": -8.333333333333332
+                },
+                "verdict": "minor_discrepancy"
+              }
+            ],
+            "item_verdict": "minor_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 34.0,
+          "protein_g": 2.8,
+          "fat_g": 0.4,
+          "saturated_fat_g": 0.0,
+          "carbohydrates_g": 7.0,
+          "sugar_g": 1.7,
+          "fiber_g": 2.6,
+          "sodium_mg": 33.0
+        },
+        "expected_kcal": 42.800000000000004,
+        "reported_kcal": 34.0,
+        "absolute_delta": 8.800000000000004,
+        "relative_delta_pct": 25.882352941176485,
+        "is_consistent": false
+      },
+      "summary": "Broccoli, Raw: cross-checked against 1 source(s). Overall verdict: minor_discrepancy. 6 nutrient(s) flagged.",
+      "reasoning": "**Finding top vegetables**\n\nI’m trying to determine the top three promising vegetables, possibly broccoli, cauliflower, and kale. I think these are great choices because they're nutritious and popular. I need to access the USDA food database to get the top three food data central IDs for these. This should help me gather accurate information and ensure I'm sharing the best options! Alright, let's see what I can find there.\n\n**Evaluating search options**\n\nI need to consider broccoli with the code fdc 747447 404, which seems a bit weird. I wonder if I could just use the search results directly? But the step suggests hydrating candidates, and since I've got a 404 error, should I really skip that? Maybe I need to take a step back and do an \"OFF\" search. Since there's no barcode, I guess I should just do a name search instead.\n\n**Evaluating candidates for selection**\n\nI’m considering that the candidates might be below the acceptable threshold, yet I still want to call the `select_best_candidate` function. It's important to include both item and USDA candidates in this selection process. The OFF candidates might not score well, but I’m curious if \"Broccoli florets\" could potentially match enough. I need to normalize the candidates to ensure a fair comparison. Let's keep moving forward with this!\n\n**Evaluating USDA candidate**\n\nI’m considering the USDA candidate and thinking it could come from one source. I need to compute the delta and make a verdict based on the search results or whether it's hydrated. It might be better to go with the search result candidate. If accepted, there could be issues since the product name is plural and there’s a brand mismatch. Regardless, I’ll use the USDA search result candidate as evidence to compute the deltas and final verdict.",
+      "notes": [
+        "usda.get_food.error fdc_id=747447 error=HTTPStatusError"
+      ]
+    },
+    {
+      "item_id": "whole-milk",
+      "item_name": "Whole Milk, 3.5% Fat",
+      "reported_nutrition": {
+        "calories_kcal": 61.0,
+        "protein_g": 3.2,
+        "fat_g": 3.5,
+        "saturated_fat_g": 2.1,
+        "carbohydrates_g": 4.8,
+        "sugar_g": 4.8,
+        "fiber_g": 0.0,
+        "sodium_mg": 44.0
+      },
+      "verdict": "no_data",
+      "confidence": "low",
+      "evidence": [],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 61.0,
+          "protein_g": 3.2,
+          "fat_g": 3.5,
+          "saturated_fat_g": 2.1,
+          "carbohydrates_g": 4.8,
+          "sugar_g": 4.8,
+          "fiber_g": 0.0,
+          "sodium_mg": 44.0
+        },
+        "expected_kcal": 63.5,
+        "reported_kcal": 61.0,
+        "absolute_delta": 2.5,
+        "relative_delta_pct": 4.098360655737705,
+        "is_consistent": true
+      },
+      "summary": "Whole Milk, 3.5% Fat: agent run failed (guardrail_trip). No verdict produced; pipeline continued.",
+      "reasoning": null,
+      "notes": [
+        "agent_failure_guardrail_trip: OutputGuardrailTripwireTriggered: Guardrail OutputGuardrail triggered tripwire",
+        "timestamp_utc: 2026-04-28T00:44:43.047173+00:00"
+      ]
+    },
+    {
+      "item_id": "egg-whole-raw",
+      "item_name": "Egg, Whole, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 155.0,
+        "protein_g": 13.0,
+        "fat_g": 11.0,
+        "saturated_fat_g": 3.3,
+        "carbohydrates_g": 1.1,
+        "sugar_g": 1.1,
+        "fiber_g": 0.0,
+        "sodium_mg": 124.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "323604",
+            "source_name": "Egg, whole, raw, frozen, pasteurized",
+            "nutrition_per_100g": {
+              "calories_kcal": 150.0,
+              "protein_g": 12.3,
+              "fat_g": 10.3,
+              "saturated_fat_g": 0.0,
+              "carbohydrates_g": 0.91,
+              "sugar_g": 0.0,
+              "fiber_g": 0.0,
+              "sodium_mg": 121.0
+            },
+            "match_score": 0.88,
+            "notes": "Foundation candidate from USDA search; hydrated successfully."
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 155.0,
+                  "observed": 150.0,
+                  "absolute_delta": 5.0,
+                  "relative_delta_pct": 3.3333333333333335
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 13.0,
+                  "observed": 12.3,
+                  "absolute_delta": 0.6999999999999993,
+                  "relative_delta_pct": 5.6910569105691
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 11.0,
+                  "observed": 10.3,
+                  "absolute_delta": 0.6999999999999993,
+                  "relative_delta_pct": 6.7961165048543615
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 3.3,
+                  "observed": 0.0,
+                  "absolute_delta": 3.3,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 1.1,
+                  "observed": 0.91,
+                  "absolute_delta": 0.19000000000000006,
+                  "relative_delta_pct": 20.879120879120887
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 1.1,
+                  "observed": 0.0,
+                  "absolute_delta": 1.1,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 124.0,
+                  "observed": 121.0,
+                  "absolute_delta": 3.0,
+                  "relative_delta_pct": 2.479338842975207
+                },
+                "verdict": "match"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 155.0,
+          "protein_g": 13.0,
+          "fat_g": 11.0,
+          "saturated_fat_g": 3.3,
+          "carbohydrates_g": 1.1,
+          "sugar_g": 1.1,
+          "fiber_g": 0.0,
+          "sodium_mg": 124.0
+        },
+        "expected_kcal": 155.4,
+        "reported_kcal": 155.0,
+        "absolute_delta": 0.4000000000000057,
+        "relative_delta_pct": 0.25806451612903597,
+        "is_consistent": true
+      },
+      "summary": "Egg, Whole, Raw: cross-checked against 1 source(s). Overall verdict: major_discrepancy. 5 nutrient(s) flagged.",
+      "reasoning": "**Evaluating correction criteria**\n\nI’m looking for a proposed correction, but it seems I have a major discrepancy. There’s just one candidate with zero saturated fat, which makes me uncertain. I need to ensure there's enough confidence based on my rules. Since there aren’t two sources available, I’m evaluating the top match score, which is 0.88, and since the item verdict is major, I can say that high confidence isn’t met. So, I’ll classify this as medium confidence.",
+      "notes": [
+        "usda.get_food.error fdc_id=748967 error=HTTPStatusError",
+        "usda.get_food.error fdc_id=329490 error=HTTPStatusError"
+      ]
+    },
+    {
+      "item_id": "almonds-raw",
+      "item_name": "Almonds, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 579.0,
+        "protein_g": 21.2,
+        "fat_g": 49.9,
+        "saturated_fat_g": 3.8,
+        "carbohydrates_g": 21.6,
+        "sugar_g": 4.4,
+        "fiber_g": 12.5,
+        "sodium_mg": 1.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "2346393",
+            "source_name": "Nuts, almonds, whole, raw",
+            "nutrition_per_100g": {
+              "calories_kcal": 0.0,
+              "protein_g": 21.45038,
+              "fat_g": 51.09,
+              "saturated_fat_g": 3.785,
+              "carbohydrates_g": 20.03462,
+              "sugar_g": 0.0,
+              "fiber_g": 10.78,
+              "sodium_mg": 0.0
+            },
+            "match_score": 0.99,
+            "notes": null
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 579.0,
+                  "observed": 0.0,
+                  "absolute_delta": 579.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 21.2,
+                  "observed": 21.45038,
+                  "absolute_delta": 0.2503799999999998,
+                  "relative_delta_pct": -1.1672520486816542
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 49.9,
+                  "observed": 51.09,
+                  "absolute_delta": 1.1900000000000048,
+                  "relative_delta_pct": -2.3292229399099718
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 3.8,
+                  "observed": 3.785,
+                  "absolute_delta": 0.01499999999999968,
+                  "relative_delta_pct": 0.39630118890355825
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 21.6,
+                  "observed": 20.03462,
+                  "absolute_delta": 1.565380000000001,
+                  "relative_delta_pct": 7.813375047792277
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 4.4,
+                  "observed": 0.0,
+                  "absolute_delta": 4.4,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 12.5,
+                  "observed": 10.78,
+                  "absolute_delta": 1.7200000000000006,
+                  "relative_delta_pct": 15.955473098330247
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 1.0,
+                  "observed": 0.0,
+                  "absolute_delta": 1.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 579.0,
+          "protein_g": 21.2,
+          "fat_g": 49.9,
+          "saturated_fat_g": 3.8,
+          "carbohydrates_g": 21.6,
+          "sugar_g": 4.4,
+          "fiber_g": 12.5,
+          "sodium_mg": 1.0
+        },
+        "expected_kcal": 620.3,
+        "reported_kcal": 579.0,
+        "absolute_delta": 41.299999999999955,
+        "relative_delta_pct": 7.132987910189975,
+        "is_consistent": true
+      },
+      "summary": "Almonds, Raw: cross-checked against 1 source(s). Overall verdict: major_discrepancy. 5 nutrient(s) flagged.",
+      "reasoning": "**Planning searches for USDA and OFF**\n\nI need to follow some steps. First, I’ll search for the USDA foundation. If that yields fewer than 2 results, I might check SR legacy next. I’m considering using multi-tool searches in parallel for USDA and OFF, but I’ll search OFF by name only and skip the barcode. So, I’ll likely use search_usda and search_off_by_name in parallel to get the best results efficiently!\n\n**Considering product options**\n\nI think I need to focus on SR Legacy since there are fewer than two results. The USDA search returned many options, but I want to narrow it down to the top three promising candidates. It looks like the almond one may be the most viable. I’ll go ahead and get fdc 2346393, but maybe I should consider other options too, even though only one seems promising right now. Let's proceed!\n\n**Searching for candidates**\n\nI’m focused on selecting the best candidate from available sources. It looks like I only have the USDA candidate for now. Since the OFF approach has failed, I might need to consider a web search as a fallback option since USDA and OFF together yield fewer than two viable candidates. I should look into this further to ensure I have enough options to work with!\n\n**Building candidate selections**\n\nI need to select the best candidate for USDA and web. I think it’s best to focus on them separately. Maybe I’ll build normalized candidates for both. Running them in parallel could be efficient for this task. It's essential for me to ensure I'm not missing any important details in the selection process, especially since both areas might have different criteria or needs. I just want to make sure everything is done right!\n\n**Finalizing JSON Schema**\n\nI need to create a final JSON object that matches the specific schema. My reasoning needs to be concise, so notes should be left empty. I'll include evidence with a source to back up the information, though it might just be one entry in the evidence array. Also, I should ensure that the selected candidate is not web-based or off somehow—it has to be an Atwater input object. Let's lock this down!",
+      "notes": [
+        "tavily.search query='Almonds, Raw nutrition per 100g'"
+      ]
+    },
+    {
+      "item_id": "oats-rolled-dry",
+      "item_name": "Oats, Rolled, Dry",
+      "reported_nutrition": {
+        "calories_kcal": 240.0,
+        "protein_g": 8.0,
+        "fat_g": 4.2,
+        "saturated_fat_g": 0.8,
+        "carbohydrates_g": 42.0,
+        "sugar_g": 0.0,
+        "fiber_g": 5.8,
+        "sodium_mg": 4.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "2346396",
+            "source_name": "Oats, whole grain, rolled, old fashioned",
+            "nutrition_per_100g": {
+              "calories_kcal": 0.0,
+              "protein_g": 13.49645,
+              "fat_g": 5.89,
+              "saturated_fat_g": 0.0,
+              "carbohydrates_g": 68.65755,
+              "sugar_g": 0.0,
+              "fiber_g": 0.0,
+              "sodium_mg": 0.6675
+            },
+            "match_score": 0.98,
+            "notes": null
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 240.0,
+                  "observed": 0.0,
+                  "absolute_delta": 240.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 8.0,
+                  "observed": 13.49645,
+                  "absolute_delta": 5.496449999999999,
+                  "relative_delta_pct": -40.72515365151577
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 4.2,
+                  "observed": 5.89,
+                  "absolute_delta": 1.6899999999999995,
+                  "relative_delta_pct": -28.692699490662132
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 0.8,
+                  "observed": 0.0,
+                  "absolute_delta": 0.8,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 42.0,
+                  "observed": 68.65755,
+                  "absolute_delta": 26.65755,
+                  "relative_delta_pct": -38.82682967860053
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 5.8,
+                  "observed": 0.0,
+                  "absolute_delta": 5.8,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 4.0,
+                  "observed": 0.6675,
+                  "absolute_delta": 3.3325,
+                  "relative_delta_pct": 499.25093632958806
+                },
+                "verdict": "major_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 240.0,
+          "protein_g": 8.0,
+          "fat_g": 4.2,
+          "saturated_fat_g": 0.8,
+          "carbohydrates_g": 42.0,
+          "sugar_g": 0.0,
+          "fiber_g": 5.8,
+          "sodium_mg": 4.0
+        },
+        "expected_kcal": 237.8,
+        "reported_kcal": 240.0,
+        "absolute_delta": 2.1999999999999886,
+        "relative_delta_pct": 0.916666666666662,
+        "is_consistent": true
+      },
+      "summary": "Oats, Rolled, Dry: cross-checked against 1 source(s). Overall verdict: major_discrepancy. 7 nutrient(s) flagged.",
+      "reasoning": "**Selecting the best option**\n\nI need to choose the best candidate, and it looks like there’s likely just one. There’s no OFF option available, which makes me wonder if I need to conduct a search function by name instead. I’m not dealing with a barcode here, so focusing on searching by name might be the way to go. It's interesting how these decisions can get a bit complicated! Let's see how it unfolds.\n\n**Deciding on candidates**\n\nI need to think about whether to continue searching aggressively. I'll only do that if there are fewer than two hydrated candidates. Since we have three hydrated candidates from USDA, it looks like there's probably no need for further search. It makes sense to select the candidate source from USDA, likely using oats as the top match. This approach seems straightforward, so I’ll stick with it unless something changes.",
+      "notes": []
+    },
+    {
+      "item_id": "avocado-raw",
+      "item_name": "Avocado, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 160.0,
+        "protein_g": 2.0,
+        "fat_g": 4.5,
+        "saturated_fat_g": 0.6,
+        "carbohydrates_g": 8.5,
+        "sugar_g": 0.7,
+        "fiber_g": 6.7,
+        "sodium_mg": 7.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "2710824",
+            "source_name": "Avocado, Hass, peeled, raw",
+            "nutrition_per_100g": {
+              "calories_kcal": 0.0,
+              "protein_g": 1.8125,
+              "fat_g": 20.31,
+              "saturated_fat_g": 0.0,
+              "carbohydrates_g": 8.3235,
+              "sugar_g": 0.0,
+              "fiber_g": 0.0,
+              "sodium_mg": 0.0
+            },
+            "match_score": 0.98,
+            "notes": null
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 160.0,
+                  "observed": 0.0,
+                  "absolute_delta": 160.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 2.0,
+                  "observed": 1.8125,
+                  "absolute_delta": 0.1875,
+                  "relative_delta_pct": 10.344827586206897
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 4.5,
+                  "observed": 20.31,
+                  "absolute_delta": 15.809999999999999,
+                  "relative_delta_pct": -77.84342688330871
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 0.6,
+                  "observed": 0.0,
+                  "absolute_delta": 0.6,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 8.5,
+                  "observed": 8.3235,
+                  "absolute_delta": 0.17650000000000077,
+                  "relative_delta_pct": 2.1205021925872622
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 0.7,
+                  "observed": 0.0,
+                  "absolute_delta": 0.7,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 6.7,
+                  "observed": 0.0,
+                  "absolute_delta": 6.7,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 7.0,
+                  "observed": 0.0,
+                  "absolute_delta": 7.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 160.0,
+          "protein_g": 2.0,
+          "fat_g": 4.5,
+          "saturated_fat_g": 0.6,
+          "carbohydrates_g": 8.5,
+          "sugar_g": 0.7,
+          "fiber_g": 6.7,
+          "sodium_mg": 7.0
+        },
+        "expected_kcal": 82.5,
+        "reported_kcal": 160.0,
+        "absolute_delta": 77.5,
+        "relative_delta_pct": 48.4375,
+        "is_consistent": false
+      },
+      "summary": "Avocado, Raw: cross-checked against 1 source(s). Overall verdict: major_discrepancy. 7 nutrient(s) flagged.",
+      "reasoning": "**Selecting USDA candidates**\n\nI need to identify the top three USDA candidates, and I'm thinking that avocado might be one of them. I wonder if we even need to consider the SR legacy data if there are fewer than two results. Actually, it seems like there are plenty of results, but I want to focus on the top three. I also need to get USDA food for candidate 2710824 and possibly others, since select_best uses hydrated candidates — maybe just one will do.\n\n**Calculating USDA Delta**\n\nI’m thinking about computing the delta for USDA only. It seems I might only need to consider candidates that show evidence, potentially just one. However, it’s possible that none qualify due to minimum score issues, which might be related to calorie mismatches. If the `select_best_candidate` function returns None, I’ll just skip that. It looks like I should focus solely on the USDA evidence for the delta and final verdict.\n\n**Considering nutritional discrepancies**\n\nI need to propose a correction due to a major discrepancy found in the USDA data. It appears that there are zeros as placeholders for sugar, fiber, sodium, calories, and saturated fat. This might suggest that the full USDA nutrition information is missing several fields, which is concerning because I'm not confident in what I've recovered. So, it looks like I need to summarize this using a tool.",
+      "notes": [
+        "tavily.search query='Avocado, Raw nutrition per 100g'"
+      ]
+    },
+    {
+      "item_id": "salmon-atlantic-farmed-raw",
+      "item_name": "Salmon, Atlantic, Farmed, Raw",
+      "reported_nutrition": {
+        "calories_kcal": 131.0,
+        "protein_g": 20.4,
+        "fat_g": 5.2,
+        "saturated_fat_g": 1.2,
+        "carbohydrates_g": 0.0,
+        "sugar_g": 0.0,
+        "fiber_g": 0.0,
+        "sodium_mg": 59.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "usda",
+          "candidate": {
+            "source": "usda",
+            "source_id": "2684441",
+            "source_name": "Fish, salmon, Atlantic, farm raised, raw",
+            "nutrition_per_100g": {
+              "calories_kcal": 0.0,
+              "protein_g": 20.31875,
+              "fat_g": 13.11,
+              "saturated_fat_g": 2.277,
+              "carbohydrates_g": 0.0,
+              "sugar_g": 0.0,
+              "fiber_g": 0.0,
+              "sodium_mg": 49.49
+            },
+            "match_score": 0.98,
+            "notes": "Foundation USDA exact match"
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 131.0,
+                  "observed": 0.0,
+                  "absolute_delta": 131.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 20.4,
+                  "observed": 20.31875,
+                  "absolute_delta": 0.08125000000000114,
+                  "relative_delta_pct": 0.3999999999999945
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 5.2,
+                  "observed": 13.11,
+                  "absolute_delta": 7.91,
+                  "relative_delta_pct": -60.33585075653349
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 1.2,
+                  "observed": 2.277,
+                  "absolute_delta": 1.077,
+                  "relative_delta_pct": -47.25649538868731
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 59.0,
+                  "observed": 49.49,
+                  "absolute_delta": 9.510000000000005,
+                  "relative_delta_pct": 19.2261062840978
+                },
+                "verdict": "major_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        },
+        {
+          "source": "web",
+          "candidate": {
+            "source": "web",
+            "source_id": "https://www.recipal.com/ingredients/4595-nutrition-facts-calories-protein-carbs-fat-fish-salmon-atlantic-farmed-raw",
+            "source_name": "Fish, salmon, Atlantic, farmed, raw - Nutrition Facts - ReciPal",
+            "nutrition_per_100g": {
+              "calories_kcal": 208.0,
+              "protein_g": 20.42,
+              "fat_g": 13.42,
+              "saturated_fat_g": 0.0,
+              "carbohydrates_g": 0.0,
+              "sugar_g": 0.0,
+              "fiber_g": 0.0,
+              "sodium_mg": 0.0
+            },
+            "match_score": 0.9,
+            "notes": "Web snippet with per 100g values"
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 131.0,
+                  "observed": 0.0,
+                  "absolute_delta": 131.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 20.4,
+                  "observed": 20.31875,
+                  "absolute_delta": 0.08125000000000114,
+                  "relative_delta_pct": 0.3999999999999945
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 5.2,
+                  "observed": 13.11,
+                  "absolute_delta": 7.91,
+                  "relative_delta_pct": -60.33585075653349
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 1.2,
+                  "observed": 2.277,
+                  "absolute_delta": 1.077,
+                  "relative_delta_pct": -47.25649538868731
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 0.0,
+                  "observed": 0.0,
+                  "absolute_delta": 0.0,
+                  "relative_delta_pct": null
+                },
+                "verdict": "match"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 59.0,
+                  "observed": 49.49,
+                  "absolute_delta": 9.510000000000005,
+                  "relative_delta_pct": 19.2261062840978
+                },
+                "verdict": "major_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 131.0,
+          "protein_g": 20.4,
+          "fat_g": 5.2,
+          "saturated_fat_g": 1.2,
+          "carbohydrates_g": 0.0,
+          "sugar_g": 0.0,
+          "fiber_g": 0.0,
+          "sodium_mg": 59.0
+        },
+        "expected_kcal": 128.4,
+        "reported_kcal": 131.0,
+        "absolute_delta": 2.5999999999999943,
+        "relative_delta_pct": 1.9847328244274764,
+        "is_consistent": true
+      },
+      "summary": "Salmon, Atlantic, Farmed, Raw: cross-checked against 2 source(s). Overall verdict: major_discrepancy. 4 nutrient(s) flagged.",
+      "reasoning": "**Selecting candidates**\n\nI need to choose the best candidates from different sources, possibly including USDA. I can also consider web candidates like Recipal or MyFoodData. I should look for hydrated candidates, so maybe I’ll pick two from the web. My plan is to build an array of the selected candidates to keep things organized. This approach will help ensure I make informed decisions while comparing the options available.\n\n**Considering candidate selection**\n\nI think I need to select the best candidate for the USDA source separately. It seems I can choose from the various USDA candidates but need to remember that it will only pick one candidate. So, it's important that I narrow it down properly. I'll go ahead and do that now to ensure I get the right choice. This process needs careful consideration!",
+      "notes": [
+        "tavily.search query='Salmon, Atlantic, Farmed, Raw nutrition per 100g'"
+      ]
+    },
+    {
+      "item_id": "fage-total-0-greek-yogurt",
+      "item_name": "Total 0% Greek Yogurt, Plain",
+      "reported_nutrition": {
+        "calories_kcal": 57.0,
+        "protein_g": 5.5,
+        "fat_g": 0.2,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 6.4,
+        "sugar_g": 6.4,
+        "fiber_g": 0.0,
+        "sodium_mg": 41.0
+      },
+      "verdict": "no_data",
+      "confidence": "low",
+      "evidence": [],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 57.0,
+          "protein_g": 5.5,
+          "fat_g": 0.2,
+          "saturated_fat_g": 0.1,
+          "carbohydrates_g": 6.4,
+          "sugar_g": 6.4,
+          "fiber_g": 0.0,
+          "sodium_mg": 41.0
+        },
+        "expected_kcal": 49.4,
+        "reported_kcal": 57.0,
+        "absolute_delta": 7.600000000000001,
+        "relative_delta_pct": 13.333333333333336,
+        "is_consistent": true
+      },
+      "summary": "Total 0% Greek Yogurt, Plain: agent run failed (guardrail_trip). No verdict produced; pipeline continued.",
+      "reasoning": null,
+      "notes": [
+        "agent_failure_guardrail_trip: OutputGuardrailTripwireTriggered: Guardrail OutputGuardrail triggered tripwire",
+        "timestamp_utc: 2026-04-28T00:50:56.922983+00:00"
+      ]
+    },
+    {
+      "item_id": "white-bread",
+      "item_name": "White Bread",
+      "reported_nutrition": {
+        "calories_kcal": 198.0,
+        "protein_g": 6.5,
+        "fat_g": 1.1,
+        "saturated_fat_g": 0.3,
+        "carbohydrates_g": 40.5,
+        "sugar_g": 3.2,
+        "fiber_g": 1.2,
+        "sodium_mg": 350.0
+      },
+      "verdict": "major_discrepancy",
+      "confidence": "medium",
+      "evidence": [
+        {
+          "source": "off",
+          "candidate": {
+            "source": "off",
+            "source_id": "5010044000121",
+            "source_name": "Original Toastie Soft & Sliced White Loaf",
+            "nutrition_per_100g": {
+              "calories_kcal": 244.725738396624,
+              "protein_g": 9.1,
+              "fat_g": 2.0,
+              "saturated_fat_g": 0.5,
+              "carbohydrates_g": 46.4,
+              "sugar_g": 3.0,
+              "fiber_g": 2.3,
+              "sodium_mg": 392.0
+            },
+            "match_score": 0.88,
+            "notes": "OFF hydrated candidate"
+          },
+          "bundle": {
+            "per_nutrient": [
+              {
+                "nutrient": "calories_kcal",
+                "delta": {
+                  "nutrient": "calories_kcal",
+                  "reported": 198.0,
+                  "observed": 244.725738396624,
+                  "absolute_delta": 46.72573839662398,
+                  "relative_delta_pct": -19.09183673469387
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "protein_g",
+                "delta": {
+                  "nutrient": "protein_g",
+                  "reported": 6.5,
+                  "observed": 9.1,
+                  "absolute_delta": 2.5999999999999996,
+                  "relative_delta_pct": -28.57142857142857
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "fat_g",
+                "delta": {
+                  "nutrient": "fat_g",
+                  "reported": 1.1,
+                  "observed": 2.0,
+                  "absolute_delta": 0.8999999999999999,
+                  "relative_delta_pct": -45.0
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "saturated_fat_g",
+                "delta": {
+                  "nutrient": "saturated_fat_g",
+                  "reported": 0.3,
+                  "observed": 0.5,
+                  "absolute_delta": 0.2,
+                  "relative_delta_pct": -40.0
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "carbohydrates_g",
+                "delta": {
+                  "nutrient": "carbohydrates_g",
+                  "reported": 40.5,
+                  "observed": 46.4,
+                  "absolute_delta": 5.899999999999999,
+                  "relative_delta_pct": -12.715517241379306
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "sugar_g",
+                "delta": {
+                  "nutrient": "sugar_g",
+                  "reported": 3.2,
+                  "observed": 3.0,
+                  "absolute_delta": 0.20000000000000018,
+                  "relative_delta_pct": 6.666666666666672
+                },
+                "verdict": "minor_discrepancy"
+              },
+              {
+                "nutrient": "fiber_g",
+                "delta": {
+                  "nutrient": "fiber_g",
+                  "reported": 1.2,
+                  "observed": 2.3,
+                  "absolute_delta": 1.0999999999999999,
+                  "relative_delta_pct": -47.826086956521735
+                },
+                "verdict": "major_discrepancy"
+              },
+              {
+                "nutrient": "sodium_mg",
+                "delta": {
+                  "nutrient": "sodium_mg",
+                  "reported": 350.0,
+                  "observed": 392.0,
+                  "absolute_delta": 42.0,
+                  "relative_delta_pct": -10.714285714285714
+                },
+                "verdict": "minor_discrepancy"
+              }
+            ],
+            "item_verdict": "major_discrepancy"
+          }
+        }
+      ],
+      "proposed_correction": null,
+      "atwater_check_input": {
+        "nutrition": {
+          "calories_kcal": 198.0,
+          "protein_g": 6.5,
+          "fat_g": 1.1,
+          "saturated_fat_g": 0.3,
+          "carbohydrates_g": 40.5,
+          "sugar_g": 3.2,
+          "fiber_g": 1.2,
+          "sodium_mg": 350.0
+        },
+        "expected_kcal": 197.9,
+        "reported_kcal": 198.0,
+        "absolute_delta": 0.09999999999999432,
+        "relative_delta_pct": 0.05050505050504763,
+        "is_consistent": true
+      },
+      "summary": "White Bread: cross-checked against 1 source(s). Overall verdict: major_discrepancy. 8 nutrient(s) flagged.",
+      "reasoning": "**Considering candidate selection**\n\nI might need to use USDA 790146, but I sense there could be a selection failure here, especially if only one candidate was selected. I think I’ll need a summary that could use the format_human_summary with a bundle. There’s no proposed correction since the candidate isn't confidently recovered. However, I’m wondering if I could work with what I have using OFF to modify things a bit. Alright, let’s proceed with the summary!\n\n**Crafting final JSON**\n\nI need to finalize the JSON with the required fields. My confidence level is medium based on the rule: I need at least two evidence sources and a top candidate match score of 0.85 or higher for a high verdict. Currently, I have one source with a match score of 0.88, so that fits for medium. I'll also need to include the proposed correction as null. Let's make sure the reasoning is concise and highlights the tools used along with the discrepancy.",
+      "notes": [
+        "usda.get_food.error fdc_id=335240 error=HTTPStatusError",
+        "usda.get_food.error fdc_id=325871 error=HTTPStatusError"
+      ]
+    }
+  ]
+}

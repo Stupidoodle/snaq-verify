@@ -1,0 +1,78 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-28T00:51:41.625394Z",
+    "model": "gpt-5.4-mini",
+    "item_count": 11
+  },
+  "judgments": [
+    {
+      "item_id": "chicken-breast-raw",
+      "score": 0.9,
+      "correct_verdict": true,
+      "reasoning": "The verifier’s major_discrepancy verdict is correct: the ground truth shows a major mismatch in calories and fat, consistent with the notes indicating the reported values look cooked rather than raw. Protein, saturated fat, carbs, sugar, fiber, and sodium are close to ground truth, so only a few nutrients are off. The score is slightly below perfect because the verifier’s evidence table treats calories oddly as 0.0 and includes some minor nutrient-level inconsistencies, but the overall verdict aligns with the authoritative data."
+    },
+    {
+      "item_id": "banana-raw",
+      "score": 0.92,
+      "correct_verdict": true,
+      "reasoning": "The verifier’s overall verdict matches the ground truth: the authoritative banana entry is very close to the web candidate and differs from the reported nutrition enough to justify a discrepancy classification. Although the verifier labeled it major_discrepancy while the ground truth commentary emphasizes major issues in the input file, the key macros in the ground truth and verification are aligned closely enough that the verdict direction is reasonable. The score is slightly below perfect because the verifier’s evidence mix includes an incorrect USDA candidate and some nutrient-level discrepancies/annotations that are not fully consistent with the authoritative entry."
+    },
+    {
+      "item_id": "broccoli-raw",
+      "score": 0.84,
+      "correct_verdict": true,
+      "reasoning": "The verifier’s overall verdict of minor_discrepancy matches the ground truth, since the key macros are mostly within the 5–15% band and none exceed the 15% threshold. The main issue is that the USDA reference used in the evidence is the wrong FDC entry, which leads to an incorrect observed calorie value and an inaccurate sugar comparison. Still, the direction of the verdict is correct and the major macro discrepancies were not missed."
+    },
+    {
+      "item_id": "whole-milk",
+      "score": 0.9,
+      "correct_verdict": false,
+      "reasoning": "The ground truth indicates this item should be a match, since all key macros are very close to the reported values and within the stated tolerance. The verifier returned no_data/low confidence instead of match, so the verdict is incorrect. The nutrition values themselves are close enough that the lack of a match is a missed correct classification rather than a content discrepancy."
+    },
+    {
+      "item_id": "egg-whole-raw",
+      "score": 0.2,
+      "correct_verdict": false,
+      "reasoning": "The verifier’s overall verdict is wrong: the ground truth indicates a minor_discrepancy, not a major_discrepancy. Most key macros are within 5–10% of ground truth, with calories and fat in the minor range and only carbohydrates exceeding 15% due to the small absolute value. The reasoning also relies on a low-confidence concern that is not supported by the ground truth, so the verdict alignment is poor."
+    },
+    {
+      "item_id": "almonds-raw",
+      "score": 0.1,
+      "correct_verdict": false,
+      "reasoning": "The verifier’s overall verdict is wrong: the ground truth says this item should be MATCH because all key macros are within 2% of reference. It incorrectly used a USDA candidate with calories listed as 0.0, which caused it to label the item as a major discrepancy even though the reported nutrition itself matches the authoritative entry. The only notable issue is the candidate selection, not the item-level nutrition values."
+    },
+    {
+      "item_id": "oats-rolled-dry",
+      "score": 0.93,
+      "correct_verdict": true,
+      "reasoning": "The verifier reached the correct overall verdict of major_discrepancy, which is supported by the ground truth: calories, protein, fat, and carbohydrates are all far enough off to clearly exceed the 15% threshold. Its evidence also aligns well with the authoritative USDA entry for rolled oats. The score is not perfect because some per-nutrient details are off, especially calories being listed as 0.0 in the evidence and fiber/saturated fat comparisons differing from ground truth."
+    },
+    {
+      "item_id": "avocado-raw",
+      "score": 0.96,
+      "correct_verdict": true,
+      "reasoning": "The verifier’s overall verdict of major_discrepancy is correct because the ground truth shows large errors in key macros, especially fat and calories, both well beyond the 15% threshold. Protein and carbohydrates are close, so the major discrepancy is driven by the large fat and kcal mismatch, which the verifier identified. A minor issue is that several auxiliary nutrient comparisons rely on zero-filled candidate fields, but that does not change the verdict."
+    },
+    {
+      "item_id": "salmon-atlantic-farmed-raw",
+      "score": 0.98,
+      "correct_verdict": true,
+      "reasoning": "The verifier’s overall verdict matches the ground truth: this item should be a major_discrepancy because fat is far off, and calories are also materially different. Protein, carbs, and sodium are close to the authoritative values, so the main issue is the large fat mismatch. The proposed correction is absent, but the item-level verdict is still correct and well supported by the evidence."
+    },
+    {
+      "item_id": "fage-total-0-greek-yogurt",
+      "score": 0.2,
+      "correct_verdict": false,
+      "reasoning": "The verifier returned no_data, but the ground truth clearly contains nutrition information, so the verdict is wrong. The biggest issue is protein, which is far from the authoritative value and would imply a major discrepancy, while calories happen to match exactly. Because it missed a large macro error and failed to make a substantive verdict, this is a poor evaluation."
+    },
+    {
+      "item_id": "white-bread",
+      "score": 0.95,
+      "correct_verdict": true,
+      "reasoning": "The verifier’s major_discrepancy verdict matches the ground truth, which also indicates a planted major error and expects a major discrepancy. Most reported nutrients are materially below the reference, with several key macros differing by more than 15%, so the direction is clearly correct. The only minor issue is that the verifier’s evidence comes from an OFF candidate rather than the authoritative USDA entry, but that does not change the verdict alignment."
+    }
+  ],
+  "aggregate_score": 0.7163636363636363,
+  "correct_verdicts": 7,
+  "total": 11
+}

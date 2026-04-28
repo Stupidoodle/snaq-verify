@@ -37,5 +37,3 @@ htmlcov/
 # project artifacts
 .cache/
 output/
-verification_report.json
-eval_report.json
