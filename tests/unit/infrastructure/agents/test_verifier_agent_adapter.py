@@ -145,6 +145,7 @@ async def test_verify_creates_context_with_ports() -> None:
     assert ctx.usda is usda_mock
     assert ctx.off is off_mock
     assert ctx.tavily is tavily_mock
+    assert ctx.item is item  # item passed for is_enabled barcode gate
 
 
 async def test_verify_logs_start_and_done() -> None:
@@ -328,6 +329,173 @@ async def test_verify_reasoning_stays_none_when_no_items_and_no_llm_reasoning() 
         result = await adapter.verify(item)
 
     assert result.reasoning is None
+
+
+# ---------------------------------------------------------------------------
+# verify() — is_enabled barcode gate (VerifierContext.item)
+# ---------------------------------------------------------------------------
+
+
+async def test_verify_context_carries_item() -> None:
+    """VerifierContext.item is the exact FoodItem passed to verify()."""
+    from snaq_verify.infrastructure.agents.verifier_agent import VerifierContext
+
+    item = make_food_item(item_id="fage-total-0-greek-yogurt")
+    run_result = _make_run_result(make_item_verification(item=item))
+
+    captured_ctx: list[VerifierContext] = []
+
+    async def _capture_run(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        captured_ctx.append(context)
+        return run_result
+
+    with patch(_RUNNER_RUN, new=_capture_run):
+        adapter = _make_adapter()
+        await adapter.verify(item)
+
+    assert captured_ctx[0].item is item
+
+
+# ---------------------------------------------------------------------------
+# verify() — low-confidence retry loop
+# ---------------------------------------------------------------------------
+
+
+async def test_verify_no_retry_when_confidence_not_low() -> None:
+    """Runner.run is called exactly once when confidence is MEDIUM or higher."""
+    item = make_food_item()
+    # MEDIUM confidence (1 source, match_score=0.95 → MEDIUM by derive_confidence)
+    verification = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+    run_result = _make_run_result(verification)
+
+    call_count = 0
+
+    async def _count_calls(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        nonlocal call_count
+        call_count += 1
+        return run_result
+
+    with patch(_RUNNER_RUN, new=_count_calls):
+        adapter = _make_adapter()
+        await adapter.verify(item)
+
+    assert call_count == 1
+
+
+async def test_verify_retries_once_on_low_confidence() -> None:
+    """Runner.run is called twice when the first result has LOW confidence."""
+    item = make_food_item()
+    # First run → LOW confidence (0 evidence sources → derive_confidence=LOW)
+    low_v = make_item_verification(item=item, confidence=ConfidenceLevel.LOW)
+    low_v = low_v.model_copy(update={"evidence": []})
+
+    # Second run → MEDIUM confidence (evidence restored)
+    medium_v = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+
+    call_count = 0
+    inputs_received: list[object] = []
+
+    def _make_low_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = low_v
+        r.new_items = []
+        r.to_input_list.return_value = [{"role": "assistant", "content": "prior turn"}]
+        return r
+
+    def _make_medium_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = medium_v
+        r.new_items = []
+        return r
+
+    async def _two_phase_run(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        nonlocal call_count
+        call_count += 1
+        inputs_received.append(input)
+        return _make_low_run() if call_count == 1 else _make_medium_run()
+
+    with patch(_RUNNER_RUN, new=_two_phase_run):
+        adapter = _make_adapter()
+        result = await adapter.verify(item)
+
+    assert call_count == 2
+    # Second call must include the retry feedback prompt
+    retry_input = inputs_received[1]
+    assert isinstance(retry_input, list)
+    assert any("LOW" in str(msg) for msg in retry_input)
+    # Final result should reflect the second run's output
+    assert result.item_id == medium_v.item_id
+
+
+async def test_verify_accepts_low_confidence_after_retry() -> None:
+    """Retry still returns LOW → adapter accepts it (no infinite loop)."""
+    item = make_food_item()
+    low_v = make_item_verification(item=item, confidence=ConfidenceLevel.LOW)
+    low_v = low_v.model_copy(update={"evidence": []})
+
+    call_count = 0
+
+    def _make_low_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = low_v
+        r.new_items = []
+        r.to_input_list.return_value = []
+        return r
+
+    async def _always_low(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        nonlocal call_count
+        call_count += 1
+        return _make_low_run()
+
+    with patch(_RUNNER_RUN, new=_always_low):
+        adapter = _make_adapter()
+        result = await adapter.verify(item)
+
+    # Maximum 2 calls — no more
+    assert call_count == 2
+    assert isinstance(result, ItemVerification)
+
+
+async def test_verify_retry_logs_retry_event() -> None:
+    """verify() logs a retry event when confidence is LOW."""
+    item = make_food_item()
+    low_v = make_item_verification(item=item, confidence=ConfidenceLevel.LOW)
+    low_v = low_v.model_copy(update={"evidence": []})
+    medium_v = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+
+    call_count = 0
+
+    def _make_low_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = low_v
+        r.new_items = []
+        r.to_input_list.return_value = []
+        return r
+
+    def _make_medium_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = medium_v
+        r.new_items = []
+        return r
+
+    async def _two_phase(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        nonlocal call_count
+        call_count += 1
+        return _make_low_run() if call_count == 1 else _make_medium_run()
+
+    logger = FakeLogger()
+    with patch(_RUNNER_RUN, new=_two_phase):
+        adapter = VerifierAgentAdapter(
+            settings=_SETTINGS_STUB,
+            logger=logger,
+            usda=MagicMock(),
+            off=MagicMock(),
+            tavily=MagicMock(),
+        )
+        await adapter.verify(item)
+
+    messages = [m[1] for m in logger.messages]
+    assert any("retry" in m for m in messages)
 
 
 # ---------------------------------------------------------------------------

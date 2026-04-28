@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from agents import Agent, ModelSettings, RunContextWrapper, function_tool
+from agents import Agent, AgentBase, ModelSettings, RunContextWrapper, function_tool
 from openai.types.shared import Reasoning
 
 from snaq_verify.application.tools.check_atwater_consistency import (
@@ -22,6 +22,7 @@ from snaq_verify.application.tools.select_best_candidate import (
 from snaq_verify.application.tools.verdict_from_deltas import verdict_from_deltas_tool
 from snaq_verify.core.config import Settings
 from snaq_verify.domain.models.enums import USDADataType
+from snaq_verify.domain.models.food_item import FoodItem
 from snaq_verify.domain.models.item_verification import ItemVerification
 from snaq_verify.domain.models.source_lookup import (
     OFFProduct,
@@ -59,12 +60,17 @@ class VerifierContext:
     After the run completes, the adapter copies ``tool_events`` into the
     ``ItemVerification.notes`` field, replacing any LLM-generated text with
     a mechanically-derived audit trail.
+
+    ``item`` is used by the ``is_enabled`` predicate on
+    ``lookup_off_by_barcode`` to skip the tool entirely when the food item
+    has no barcode, avoiding a guaranteed wasted API round-trip.
     """
 
     usda: USDAClientPort
     off: OpenFoodFactsClientPort
     tavily: TavilyClientPort
     settings: Settings
+    item: FoodItem
     tool_events: list[str] = field(default_factory=list)
 
 
@@ -130,8 +136,7 @@ async def get_usda_food(
         raise
 
 
-@function_tool
-async def lookup_off_by_barcode(
+async def _lookup_off_by_barcode_fn(
     ctx: RunContextWrapper[VerifierContext],
     barcode: str,
 ) -> OFFProduct | None:
@@ -152,6 +157,27 @@ async def lookup_off_by_barcode(
             f"off.lookup_by_barcode.not_found barcode={barcode!r}",
         )
     return result
+
+
+def _item_has_barcode(
+    ctx: RunContextWrapper[VerifierContext], _agent: AgentBase,
+) -> bool:
+    """Return True only when the food item being verified has a barcode.
+
+    Used as the ``is_enabled`` predicate on ``lookup_off_by_barcode`` so the
+    agent never attempts a barcode lookup for items that have no barcode —
+    avoiding a guaranteed 404 round-trip to OFF.
+    """
+    return ctx.context.item.barcode is not None
+
+
+#: ``lookup_off_by_barcode`` is disabled at runtime when the item has no
+#: barcode, so the LLM cannot accidentally call it and waste an API round-trip.
+lookup_off_by_barcode = function_tool(
+    _lookup_off_by_barcode_fn,
+    name_override="lookup_off_by_barcode",
+    is_enabled=_item_has_barcode,
+)
 
 
 @function_tool
