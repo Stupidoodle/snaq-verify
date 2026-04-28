@@ -23,6 +23,11 @@ from snaq_verify.infrastructure.agents.verifier_agent import (
     build_verifier_agent,
 )
 
+# Maximum agent turns per verification run.  Default SDK value is 10, which is
+# too low for our flow: USDA search → 2 candidate fetches → OFF lookup/search
+# → Tavily web-search → compute tools → synthesis → optional soft retry.
+_MAX_TURNS = 30
+
 _LOW_CONFIDENCE_RETRY_PROMPT = (
     "Your confidence is LOW. Re-examine the evidence you already gathered. "
     "If you have ≥2 sources with nutrition data, re-score the candidate "
@@ -121,7 +126,8 @@ class VerifierAgentAdapter(VerifierAgentPort):
         Raises:
             agents.OutputGuardrailTripwireTriggered: When the Atwater, schema,
                 or confidence guardrail detects an inconsistency.
-            agents.MaxTurnsExceeded: When the agent exceeds the turn limit.
+            agents.MaxTurnsExceeded: When the agent exceeds ``_MAX_TURNS``
+                (30) turns.
         """
         self._logger.info("verifier_adapter.start", item_id=item.id, name=item.name)
 
@@ -142,6 +148,7 @@ class VerifierAgentAdapter(VerifierAgentPort):
             self._agent,
             input=prompt,
             context=context,
+            max_turns=_MAX_TURNS,
         )
 
         verification: ItemVerification = result.final_output_as(
@@ -165,6 +172,7 @@ class VerifierAgentAdapter(VerifierAgentPort):
                 self._agent,
                 input=input_items,
                 context=context,
+                max_turns=_MAX_TURNS,
             )
             verification = retry_result.final_output_as(
                 ItemVerification, raise_if_incorrect_type=True,

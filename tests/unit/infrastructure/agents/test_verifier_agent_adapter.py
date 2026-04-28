@@ -499,6 +499,68 @@ async def test_verify_retry_logs_retry_event() -> None:
 
 
 # ---------------------------------------------------------------------------
+# verify() — max_turns
+# ---------------------------------------------------------------------------
+
+
+async def test_verify_passes_max_turns_to_runner() -> None:
+    """verify() passes max_turns=30 to Runner.run."""
+    item = make_food_item()
+    run_result = _make_run_result(
+        make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM),
+    )
+
+    captured_kwargs: list[dict] = []  # type: ignore[type-arg]
+
+    async def _capture_run(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        captured_kwargs.append(kwargs)
+        return run_result
+
+    with patch(_RUNNER_RUN, new=_capture_run):
+        adapter = _make_adapter()
+        await adapter.verify(item)
+
+    assert captured_kwargs[0].get("max_turns") == 30
+
+
+async def test_verify_passes_max_turns_on_retry_run() -> None:
+    """max_turns=30 is also applied to the low-confidence retry Runner.run call."""
+    item = make_food_item()
+    low_v = make_item_verification(item=item, confidence=ConfidenceLevel.LOW)
+    low_v = low_v.model_copy(update={"evidence": []})
+    medium_v = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+
+    call_count = 0
+    all_kwargs: list[dict] = []  # type: ignore[type-arg]
+
+    def _make_low_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = low_v
+        r.new_items = []
+        r.to_input_list.return_value = []
+        return r
+
+    def _make_medium_run() -> MagicMock:
+        r = MagicMock()
+        r.final_output_as.return_value = medium_v
+        r.new_items = []
+        return r
+
+    async def _two_phase(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        nonlocal call_count
+        call_count += 1
+        all_kwargs.append(kwargs)
+        return _make_low_run() if call_count == 1 else _make_medium_run()
+
+    with patch(_RUNNER_RUN, new=_two_phase):
+        adapter = _make_adapter()
+        await adapter.verify(item)
+
+    assert call_count == 2
+    assert all(kw.get("max_turns") == 30 for kw in all_kwargs)
+
+
+# ---------------------------------------------------------------------------
 # verify() — error propagation
 # ---------------------------------------------------------------------------
 
