@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from agents import ReasoningItem, Runner, TResponseInputItem
+from agents import (
+    OutputGuardrailTripwireTriggered,
+    ReasoningItem,
+    Runner,
+    TResponseInputItem,
+)
 
 from snaq_verify.core.config import Settings
 from snaq_verify.domain.models.enums import ConfidenceLevel
@@ -125,7 +130,11 @@ class VerifierAgentAdapter(VerifierAgentPort):
 
         Raises:
             agents.OutputGuardrailTripwireTriggered: When the Atwater, schema,
-                or confidence guardrail detects an inconsistency.
+                or confidence guardrail detects an inconsistency.  Before
+                re-raising, the adapter logs ``verifier_adapter.guardrail_trip``
+                at WARNING level with the guardrail name, and appends an
+                ``agent_failure_guardrail_trip`` entry to
+                ``context.tool_events``.
             agents.MaxTurnsExceeded: When the agent exceeds ``_MAX_TURNS``
                 (30) turns.
         """
@@ -144,41 +153,55 @@ class VerifierAgentAdapter(VerifierAgentPort):
             intro = f"HINT FROM PRIOR EVAL: {hint}\n\n{intro}"
         prompt = f"{intro}\n\n{item.model_dump_json(indent=2)}"
 
-        result = await Runner.run(
-            self._agent,
-            input=prompt,
-            context=context,
-            max_turns=_MAX_TURNS,
-        )
-
-        verification: ItemVerification = result.final_output_as(
-            ItemVerification, raise_if_incorrect_type=True,
-        )
-
-        # ------------------------------------------------------------------
-        # Optional retry on LOW confidence
-        # ------------------------------------------------------------------
-        if derive_confidence(verification) is ConfidenceLevel.LOW:
-            self._logger.info(
-                "verifier_adapter.retry",
-                item_id=item.id,
-                reason="low_confidence",
-            )
-            input_items: list[TResponseInputItem] = result.to_input_list()
-            input_items.append(
-                {"role": "user", "content": _LOW_CONFIDENCE_RETRY_PROMPT},
-            )
-            retry_result = await Runner.run(
+        try:
+            result = await Runner.run(
                 self._agent,
-                input=input_items,
+                input=prompt,
                 context=context,
                 max_turns=_MAX_TURNS,
             )
-            verification = retry_result.final_output_as(
+
+            verification: ItemVerification = result.final_output_as(
                 ItemVerification, raise_if_incorrect_type=True,
             )
-            # Repoint result to retry result for reasoning extraction below
-            result = retry_result
+
+            # ------------------------------------------------------------------
+            # Optional retry on LOW confidence
+            # ------------------------------------------------------------------
+            if derive_confidence(verification) is ConfidenceLevel.LOW:
+                self._logger.info(
+                    "verifier_adapter.retry",
+                    item_id=item.id,
+                    reason="low_confidence",
+                )
+                input_items: list[TResponseInputItem] = result.to_input_list()
+                input_items.append(
+                    {"role": "user", "content": _LOW_CONFIDENCE_RETRY_PROMPT},
+                )
+                retry_result = await Runner.run(
+                    self._agent,
+                    input=input_items,
+                    context=context,
+                    max_turns=_MAX_TURNS,
+                )
+                verification = retry_result.final_output_as(
+                    ItemVerification, raise_if_incorrect_type=True,
+                )
+                # Repoint result to retry result for reasoning extraction below
+                result = retry_result
+
+        except OutputGuardrailTripwireTriggered as exc:
+            guardrail_name = exc.guardrail_result.guardrail.get_name()
+            reason = str(exc.guardrail_result.output.output_info)[:120]
+            self._logger.warning(
+                "verifier_adapter.guardrail_trip",
+                item_id=item.id,
+                guardrail=guardrail_name,
+            )
+            context.tool_events.append(
+                f"agent_failure_guardrail_trip: {guardrail_name}: {reason}",
+            )
+            raise
 
         # ------------------------------------------------------------------
         # Post-run overrides — applied regardless of guardrail outcome

@@ -561,6 +561,89 @@ async def test_verify_passes_max_turns_on_retry_run() -> None:
 
 
 # ---------------------------------------------------------------------------
+# verify() — guardrail trip diagnostics
+# ---------------------------------------------------------------------------
+
+
+async def test_verify_logs_guardrail_trip_and_reraises() -> None:
+    """verify() logs guardrail name at WARNING then re-raises tripwire exception."""
+    from agents import OutputGuardrailTripwireTriggered
+
+    item = make_food_item()
+
+    # Build a minimal fake OutputGuardrailTripwireTriggered
+    guardrail_mock = MagicMock()
+    guardrail_mock.get_name.return_value = "atwater_output_guardrail"
+    output_mock = MagicMock()
+    output_mock.output_info = {"delta_pct": 25.0}
+    guardrail_result_mock = MagicMock()
+    guardrail_result_mock.guardrail = guardrail_mock
+    guardrail_result_mock.output = output_mock
+
+    exc = OutputGuardrailTripwireTriggered(guardrail_result_mock)
+
+    async def _raise(*args, **kwargs):  # type: ignore[no-untyped-def]
+        raise exc
+
+    logger = FakeLogger()
+    with patch(_RUNNER_RUN, new=_raise):
+        adapter = VerifierAgentAdapter(
+            settings=_SETTINGS_STUB,
+            logger=logger,
+            usda=MagicMock(),
+            off=MagicMock(),
+            tavily=MagicMock(),
+        )
+        with pytest.raises(OutputGuardrailTripwireTriggered):
+            await adapter.verify(item)
+
+    trip_entries = [
+        (lvl, msg, kw)
+        for lvl, msg, kw in logger.messages
+        if msg == "verifier_adapter.guardrail_trip"
+    ]
+    assert len(trip_entries) == 1
+    lvl, _msg, kw = trip_entries[0]
+    assert lvl == "warning"
+    assert kw["guardrail"] == "atwater_output_guardrail"
+    assert kw["item_id"] == item.id
+
+
+async def test_verify_guardrail_trip_appends_tool_event() -> None:
+    """verify() appends an agent_failure_guardrail_trip note to context.tool_events."""
+    from agents import OutputGuardrailTripwireTriggered
+
+    from snaq_verify.infrastructure.agents.verifier_agent import VerifierContext
+
+    item = make_food_item()
+
+    guardrail_mock = MagicMock()
+    guardrail_mock.get_name.return_value = "schema_output_guardrail"
+    output_mock = MagicMock()
+    output_mock.output_info = {"schema_issues": ["proposed_correction missing fields"]}
+    guardrail_result_mock = MagicMock()
+    guardrail_result_mock.guardrail = guardrail_mock
+    guardrail_result_mock.output = output_mock
+
+    exc = OutputGuardrailTripwireTriggered(guardrail_result_mock)
+    captured_ctx: list[VerifierContext] = []
+
+    async def _capture_and_raise(agent, input, *, context, **kwargs):  # type: ignore[no-untyped-def]
+        captured_ctx.append(context)
+        raise exc
+
+    with patch(_RUNNER_RUN, new=_capture_and_raise):
+        adapter = _make_adapter()
+        with pytest.raises(OutputGuardrailTripwireTriggered):
+            await adapter.verify(item)
+
+    assert len(captured_ctx) == 1
+    events = captured_ctx[0].tool_events
+    assert any("agent_failure_guardrail_trip" in e for e in events)
+    assert any("schema_output_guardrail" in e for e in events)
+
+
+# ---------------------------------------------------------------------------
 # verify() — error propagation
 # ---------------------------------------------------------------------------
 
