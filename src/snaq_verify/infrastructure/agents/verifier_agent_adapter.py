@@ -85,7 +85,7 @@ class VerifierAgentAdapter(VerifierAgentPort):
     # VerifierAgentPort
     # ------------------------------------------------------------------
 
-    async def verify(self, item: FoodItem) -> ItemVerification:
+    async def verify(self, item: FoodItem, hint: str | None = None) -> ItemVerification:
         """Verify a single food item using the verifier agent.
 
         The item is serialised to JSON and passed as the agent's input message.
@@ -110,6 +110,9 @@ class VerifierAgentAdapter(VerifierAgentPort):
 
         Args:
             item: The food item to verify.
+            hint: Optional feedback from a prior judge run prepended to the
+                prompt.  Used by ``SelfVerifyStep`` to guide re-verification.
+                Defaults to ``None`` (standard verification).
 
         Returns:
             A fully populated ``ItemVerification`` with deterministic
@@ -131,6 +134,8 @@ class VerifierAgentAdapter(VerifierAgentPort):
         )
 
         intro = "Verify the following food item and return a complete ItemVerification:"
+        if hint:
+            intro = f"HINT FROM PRIOR EVAL: {hint}\n\n{intro}"
         prompt = f"{intro}\n\n{item.model_dump_json(indent=2)}"
 
         result = await Runner.run(
