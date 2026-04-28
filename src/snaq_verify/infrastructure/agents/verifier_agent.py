@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from agents import Agent, RunContextWrapper, function_tool
+from agents import Agent, ModelSettings, RunContextWrapper, function_tool
+from openai.types.shared import Reasoning
 
 from snaq_verify.application.tools.check_atwater_consistency import (
     check_atwater_consistency_tool,
@@ -287,7 +288,17 @@ Follow these steps IN ORDER:
     - Do NOT write anything in notes — not tool errors, not strategy descriptions,
       not search explanations. Leave notes: [] unconditionally.
 
-11. RETURN a complete ItemVerification with ALL fields populated.
+11. REASONING
+    - Populate the `reasoning` field with a 2–4 sentence audit trail describing:
+      which tools you called, which candidate you selected and why, and what
+      discrepancies (if any) you observed.  Cite tool results — do not speculate.
+      If you cannot reach a verdict, say so explicitly.
+      Keep it under ~400 characters.
+    - Example: "Called search_usda(Foundation)+get_usda_food for fdc_id=2646170.
+      Best candidate match_score=0.87 (USDA). Reported fat=3.6g vs USDA 1.93g
+      (86% delta) → MAJOR_DISCREPANCY on fat and kcal."
+
+12. RETURN a complete ItemVerification with ALL fields populated.
 """
 
 # ---------------------------------------------------------------------------
@@ -342,4 +353,7 @@ def build_verifier_agent(settings: Settings) -> Agent[VerifierContext]:
             confidence_output_guardrail,
         ],
         model=settings.OPENAI_MODEL,
+        model_settings=ModelSettings(
+            reasoning=Reasoning(effort="low", summary="auto"),
+        ),
     )

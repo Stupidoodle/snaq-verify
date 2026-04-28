@@ -3,7 +3,9 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from agents import set_tracing_disabled
+from agents import ReasoningItem, set_tracing_disabled
+from openai.types.responses import ResponseReasoningItem
+from openai.types.responses.response_reasoning_item import Summary
 
 from snaq_verify.domain.models.enums import ConfidenceLevel
 from snaq_verify.domain.models.item_verification import ItemVerification
@@ -243,6 +245,89 @@ async def test_verify_no_override_when_confidence_already_correct() -> None:
         result = await adapter.verify(item)
 
     assert result.confidence == ConfidenceLevel.MEDIUM
+
+
+# ---------------------------------------------------------------------------
+# verify() — reasoning audit trail
+# ---------------------------------------------------------------------------
+
+
+def _make_reasoning_item(texts: list[str]) -> ReasoningItem:
+    """Build a fake ReasoningItem with the given summary texts."""
+    raw = ResponseReasoningItem(
+        id="test-reasoning-01",
+        type="reasoning",
+        summary=[Summary(text=t, type="summary_text") for t in texts],
+    )
+    return ReasoningItem(agent=MagicMock(), raw_item=raw)
+
+
+async def test_verify_keeps_llm_reasoning_when_no_native_items() -> None:
+    """LLM's self-reported reasoning is kept when Runner has no ReasoningItems."""
+    item = make_food_item()
+    base = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+    base = base.model_copy(update={"reasoning": "Called USDA; candidate match 0.92."})
+    run_result = _make_run_result(base)
+    run_result.new_items = []  # no native reasoning items
+
+    with patch(_RUNNER_RUN, new=AsyncMock(return_value=run_result)):
+        adapter = _make_adapter()
+        result = await adapter.verify(item)
+
+    assert result.reasoning == "Called USDA; candidate match 0.92."
+
+
+async def test_verify_overrides_reasoning_with_native_items() -> None:
+    """Adapter replaces LLM reasoning with native ReasoningItem text."""
+    item = make_food_item()
+    base = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+    base = base.model_copy(update={"reasoning": "LLM self-report (should be replaced)"})
+    run_result = _make_run_result(base)
+    run_result.new_items = [
+        _make_reasoning_item(
+            ["Called search_usda(Foundation).", "Candidate match_score=0.89."],
+        ),
+    ]
+
+    with patch(_RUNNER_RUN, new=AsyncMock(return_value=run_result)):
+        adapter = _make_adapter()
+        result = await adapter.verify(item)
+
+    expected = "Called search_usda(Foundation).\n\nCandidate match_score=0.89."
+    assert result.reasoning == expected
+
+
+async def test_verify_multiple_reasoning_items_joined() -> None:
+    """Multiple ReasoningItems' summary texts are all joined with double newlines."""
+    item = make_food_item()
+    base = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+    run_result = _make_run_result(base)
+    run_result.new_items = [
+        _make_reasoning_item(["First reasoning block."]),
+        _make_reasoning_item(["Second reasoning block."]),
+    ]
+
+    with patch(_RUNNER_RUN, new=AsyncMock(return_value=run_result)):
+        adapter = _make_adapter()
+        result = await adapter.verify(item)
+
+    assert "First reasoning block." in result.reasoning  # type: ignore[operator]
+    assert "Second reasoning block." in result.reasoning  # type: ignore[operator]
+
+
+async def test_verify_reasoning_stays_none_when_no_items_and_no_llm_reasoning() -> None:
+    """reasoning stays None: no native items and LLM did not populate it."""
+    item = make_food_item()
+    base = make_item_verification(item=item, confidence=ConfidenceLevel.MEDIUM)
+    assert base.reasoning is None
+    run_result = _make_run_result(base)
+    run_result.new_items = []
+
+    with patch(_RUNNER_RUN, new=AsyncMock(return_value=run_result)):
+        adapter = _make_adapter()
+        result = await adapter.verify(item)
+
+    assert result.reasoning is None
 
 
 # ---------------------------------------------------------------------------

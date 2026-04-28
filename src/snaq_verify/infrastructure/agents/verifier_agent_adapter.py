@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from agents import Runner
+from agents import ReasoningItem, Runner
 
 from snaq_verify.core.config import Settings
 from snaq_verify.domain.models.food_item import FoodItem
@@ -138,6 +138,24 @@ class VerifierAgentAdapter(VerifierAgentPort):
         derived_conf = derive_confidence(verification)
         if derived_conf != verification.confidence:
             overrides["confidence"] = derived_conf
+
+        # Extract native reasoning tokens when the model produces them
+        # (e.g. gpt-5.1 with reasoning=Reasoning(effort="low", summary="auto")).
+        # When present, the SDK's structured reasoning summary is more reliable
+        # than the LLM's self-reported `reasoning` field in the output schema.
+        # If the model doesn't produce reasoning items, the LLM-populated field
+        # from `output_type` is kept unchanged (or stays None if not set).
+        native_reasoning: str | None = (
+            "\n\n".join(
+                s.text
+                for item in result.new_items
+                if isinstance(item, ReasoningItem)
+                for s in item.raw_item.summary
+            )
+            or None
+        )
+        if native_reasoning is not None:
+            overrides["reasoning"] = native_reasoning
 
         if overrides:
             verification = verification.model_copy(update=overrides)
