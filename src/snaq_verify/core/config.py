@@ -28,7 +28,7 @@ class Settings(BaseSettings):
 
     # --- LLM model pin ------------------------------------------------------
     # Pin a single model so reruns produce stable structured outputs.
-    OPENAI_MODEL: str = "gpt-5.1"
+    OPENAI_MODEL: str = "gpt-5.4-mini"
 
     # --- HTTP client config -------------------------------------------------
     HTTP_TIMEOUT_SECONDS: float = 15.0

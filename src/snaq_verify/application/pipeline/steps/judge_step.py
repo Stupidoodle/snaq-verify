@@ -1,5 +1,6 @@
 """JudgeStep — eval-only; scores each verification against ground truth."""
 
+import asyncio
 from datetime import UTC, datetime
 
 from snaq_verify.core.config import Settings
@@ -66,25 +67,33 @@ class JudgeStep(PipelineStep):
             entry.item_id: entry for entry in state.ground_truth
         }
 
-        judgments: list[JudgeVerdict] = []
-        for verification in state.report.items:
+        sem = asyncio.Semaphore(3)
+
+        async def _judge_one(verification: object) -> JudgeVerdict | None:
+            from snaq_verify.domain.models.item_verification import ItemVerification
+
+            assert isinstance(verification, ItemVerification)
             gt_entry = gt_map.get(verification.item_id)
             if gt_entry is None:
                 self._logger.warning(
                     "judge.no_ground_truth",
                     item_id=verification.item_id,
                 )
-                continue
+                return None
 
             self._logger.info("judge.item_start", item_id=verification.item_id)
-            verdict = await self._judge_agent.judge(verification, gt_entry)
-            judgments.append(verdict)
+            async with sem:
+                verdict = await self._judge_agent.judge(verification, gt_entry)
             self._logger.info(
                 "judge.item_done",
                 item_id=verification.item_id,
                 score=verdict.score,
                 correct=verdict.correct_verdict,
             )
+            return verdict
+
+        results = await asyncio.gather(*[_judge_one(v) for v in state.report.items])
+        judgments: list[JudgeVerdict] = [r for r in results if r is not None]
 
         total = len(judgments)
         aggregate_score = (sum(j.score for j in judgments) / total) if total > 0 else 0.0

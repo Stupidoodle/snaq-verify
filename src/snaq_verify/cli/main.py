@@ -15,6 +15,7 @@ from snaq_verify.application.pipeline.steps.load_ground_truth_step import (
 )
 from snaq_verify.application.pipeline.steps.load_input_step import LoadInputStep
 from snaq_verify.application.pipeline.steps.load_report_step import LoadReportStep
+from snaq_verify.application.pipeline.steps.self_verify_step import SelfVerifyStep
 from snaq_verify.application.pipeline.steps.verify_step import VerifyStep
 from snaq_verify.application.pipeline.steps.write_eval_report_step import (
     WriteEvalReportStep,
@@ -273,10 +274,16 @@ async def _run_and_eval(
             progress.update(task_id, description=f"Verified {item_id}")
 
         state = await container.runner.run(state, [
+            LoadGroundTruthStep(logger=logger),          # moved here so SelfVerifyStep has ground truth
             VerifyStep(
                 verifier_agent=container.verifier_agent,
                 logger=logger,
                 on_item_complete=_on_item_done,
+            ),
+            SelfVerifyStep(                              # re-verify low-scoring items inline
+                verifier_agent=container.verifier_agent,
+                judge_agent=container.judge_agent,
+                logger=logger,
             ),
             AggregateStep(logger=logger, settings=container.settings),
             WriteReportStep(logger=logger),
@@ -288,12 +295,13 @@ async def _run_and_eval(
         f"[bold green]✓[/bold green] Verification report → {output_path}  "
         f"[yellow]({flagged} flagged)[/yellow]"
     )
+    _console.print("[bold green]✓[/bold green] Self-verification complete")
 
     # ----- eval pipeline (report already in memory) ---------------------
     with _console.status("[bold]Running eval pipeline…[/bold]"):
         state = await container.runner.run(state, [
             LoadReportStep(logger=logger),       # hits in-memory shortcut
-            LoadGroundTruthStep(logger=logger),
+            # LoadGroundTruthStep already ran above — idempotency guard skips it
             JudgeStep(
                 judge_agent=container.judge_agent,
                 logger=logger,
@@ -310,3 +318,32 @@ async def _run_and_eval(
         f"[bold green]✓[/bold green] Eval report → {eval_output_path}  "
         f"[yellow](score={agg:.2f}, {correct}/{eval_total} correct)[/yellow]"
     )
+
+
+# ---------------------------------------------------------------------------
+# diff-runs
+# ---------------------------------------------------------------------------
+
+
+@app.command(name="diff-runs")
+def diff_runs(
+    baseline: Path = typer.Argument(
+        ...,
+        help="Path to the baseline eval_report.json (e.g. from plain run + eval).",
+        exists=False,
+    ),
+    corrected: Path = typer.Argument(
+        ...,
+        help="Path to the corrected eval_report.json (e.g. from run-and-eval with SelfVerifyStep).",
+        exists=False,
+    ),
+) -> None:
+    """Compare two eval_report.json files and surface per-item score deltas.
+
+    Exits 0 when the corrected run is the same or better than baseline.
+    Exits 1 when the corrected run is worse (regression guard).
+    """
+    from snaq_verify.cli.diff_runs import compare_eval_reports
+
+    code = compare_eval_reports(baseline, corrected, console=_console, err_console=_err_console)
+    raise typer.Exit(code=code)

@@ -42,6 +42,14 @@ class LoadGroundTruthStep(PipelineStep):
             FileNotFoundError: If the file does not exist.
             ValueError: If the JSON is invalid or fails schema validation.
         """
+        if state.ground_truth:
+            # Already loaded (e.g. by an earlier pipeline pass) — skip.
+            self._logger.info(
+                "load_ground_truth.skipped_already_loaded",
+                count=len(state.ground_truth),
+            )
+            return state
+
         if state.ground_truth_path is None:
             raise ValueError(
                 "LoadGroundTruthStep requires state.ground_truth_path to be set"
